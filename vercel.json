@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/lpi-2026-goals.html" }
+  ]
+}
