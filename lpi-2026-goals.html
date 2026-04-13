@@ -234,12 +234,29 @@ function displayAuthor(idea,mode){
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 async function initAuth(){
+  // Listen for auth state changes — this catches magic link redirects
+  supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    if(session?.user?.email){
+      const name = EMAIL_TO_NAME[session.user.email.toLowerCase()];
+      if(name){
+        userEmail=session.user.email; currentUser=name;
+        await loadAll();
+      } else {
+        renderUnauthorized(session.user.email);
+      }
+    } else if(event === "SIGNED_OUT" || (!session && !appLoading)){
+      currentUser=null; userEmail=null;
+      appLoading=false;
+      renderLoginScreen();
+    }
+  });
+
+  // Also check for an existing session on page load
   const {data:{session}} = await supabaseClient.auth.getSession();
-  if(session?.user?.email){
-    const name = EMAIL_TO_NAME[session.user.email.toLowerCase()];
-    if(name){ userEmail=session.user.email; currentUser=name; await loadAll(); }
-    else renderUnauthorized(session.user.email);
-  } else { appLoading=false; renderLoginScreen(); }
+  if(!session){
+    appLoading=false;
+    renderLoginScreen();
+  }
 }
 
 async function sendMagicLink(email){
