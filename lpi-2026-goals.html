@@ -262,13 +262,20 @@ async function initAuth(){
 async function sendOtpCode(email){
   const normalized=email.trim().toLowerCase();
   if(!EMAIL_TO_NAME[normalized]){ renderLoginScreen("That email address isn't on the team roster. Please check with Andy and try again."); return; }
-  const {error} = await supabaseClient.auth.signInWithOtp({ email:normalized, options:{ shouldCreateUser:true } });
+  // Use signInWithOtp with shouldCreateUser and no emailRedirectTo to force code-based OTP
+  const {error} = await supabaseClient.auth.signInWithOtp({
+    email: normalized,
+    options: {
+      shouldCreateUser: true,
+      emailRedirectTo: null
+    }
+  });
   if(error) renderLoginScreen("Something went wrong: "+error.message);
   else renderEnterCode(normalized);
 }
 
 async function verifyOtpCode(email, token){
-  if(!token||token.trim().length!==6){ renderEnterCode(email,"Please enter the full 6-digit code."); return; }
+  if(!token||token.trim().length<6||token.trim().length>8){ renderEnterCode(email,"Please enter the full 6-digit code."); return; }
   const {error} = await supabaseClient.auth.verifyOtp({ email, token:token.trim(), type:"email" });
   if(error){ renderEnterCode(email,"That code didn't work — please check and try again, or request a new one."); return; }
   const name=EMAIL_TO_NAME[email.toLowerCase()];
@@ -395,7 +402,7 @@ function renderEnterCode(email, errorMsg=""){
       <div class="success-msg">We sent a 6-digit code to <strong>${esc(email)}</strong>. Enter it below to sign in.</div>
       ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
       <input type="hidden" id="otp-email" value="${esc(email)}">
-      <div class="form-group"><input type="text" id="otp-code" placeholder="123456" maxlength="6" style="width:100%;font-size:24px;letter-spacing:6px;text-align:center;" onkeydown="if(event.key==='Enter')doVerifyCode()"></div>
+      <div class="form-group"><input type="text" id="otp-code" placeholder="code" maxlength="8" style="width:100%;font-size:24px;letter-spacing:6px;text-align:center;" onkeydown="if(event.key==='Enter')doVerifyCode()"></div>
       <button class="btn btn-primary btn-full" onclick="doVerifyCode()">Sign in →</button>
       <p class="subtitle" style="margin-top:1rem;">Didn't get it? <button class="signout-btn" onclick="doResendCode('${esc(email)}')">Send a new code</button> or <button class="signout-btn" onclick="renderLoginScreen()">use a different email</button>.</p>
     </div></div>`;
