@@ -7,15 +7,10 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #ffffff;
-      --bg-secondary: #f5f5f3;
-      --bg-tertiary: #eeede8;
-      --text: #1a1a1a;
-      --text-secondary: #6b6b6b;
-      --border: rgba(0,0,0,0.12);
-      --border-md: rgba(0,0,0,0.22);
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      --bg: #ffffff; --bg-secondary: #f5f5f3; --bg-tertiary: #eeede8;
+      --text: #1a1a1a; --text-secondary: #6b6b6b;
+      --border: rgba(0,0,0,0.12); --border-md: rgba(0,0,0,0.22);
+      --radius-md: 8px; --radius-lg: 12px;
       --purple-bg: #EEEDFE; --purple-border: #AFA9EC; --purple-text: #3C3489;
       --teal-bg: #E1F5EE; --teal-border: #5DCAA5; --teal-text: #085041;
       --green-bg: #EAF3DE; --green-text: #3B6D11;
@@ -23,13 +18,11 @@
       --red-bg: #FCEBEB; --red-border: #F09595; --red-text: #791F1F;
       --gray-bg: #F1EFE8; --gray-text: #5F5E5A;
     }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-tertiary); color: var(--text); font-size: 15px; line-height: 1.6; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-tertiary); color: var(--text); font-size: 15px; line-height: 1.6; min-height: 100vh; }
     .app { max-width: 860px; margin: 0 auto; padding: 2rem 1rem; }
     .header { margin-bottom: 1.5rem; }
     .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 4px; }
     .header p { font-size: 14px; color: var(--text-secondary); }
-
-    /* Phase bar */
     .phase-bar { display: flex; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; background: var(--bg-secondary); }
     .phase-tab { flex: 1; padding: 10px 8px; font-size: 12px; color: var(--text-secondary); cursor: default; border: none; background: transparent; border-right: 0.5px solid var(--border); text-align: center; font-family: inherit; }
     .phase-tab:last-child { border-right: none; }
@@ -40,43 +33,31 @@
     .phase-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
     .dot-green { background: #3B6D11; } .dot-amber { background: #BA7517; }
     .dot-purple { background: #534AB7; } .dot-teal { background: #0F6E56; }
-
-    /* User row */
     .user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-    .user-row label { font-size: 13px; color: var(--text-secondary); }
-    select, input[type=text], textarea { font-family: inherit; font-size: 14px; color: var(--text); background: var(--bg-secondary); border: 0.5px solid var(--border-md); border-radius: var(--radius-md); padding: 7px 10px; }
+    select, input[type=text], input[type=email], textarea { font-family: inherit; font-size: 14px; color: var(--text); background: var(--bg-secondary); border: 0.5px solid var(--border-md); border-radius: var(--radius-md); padding: 7px 10px; }
     select { cursor: pointer; }
-    input[type=text]:focus, textarea:focus, select:focus { outline: none; border-color: var(--purple-border); box-shadow: 0 0 0 2px rgba(83,74,183,0.12); }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--purple-border); box-shadow: 0 0 0 2px rgba(83,74,183,0.12); }
     textarea { resize: vertical; min-height: 80px; width: 100%; }
-
-    /* Badges */
-    .badge { display: inline-flex; align-items: center; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 400; }
+    .badge { display: inline-flex; align-items: center; font-size: 11px; padding: 2px 8px; border-radius: 6px; }
     .badge-purple { background: var(--purple-bg); color: var(--purple-text); }
     .badge-teal { background: var(--teal-bg); color: var(--teal-text); }
     .badge-green { background: var(--green-bg); color: var(--green-text); }
     .badge-amber { background: var(--amber-bg); color: var(--amber-text); }
     .badge-gray { background: var(--gray-bg); color: var(--gray-text); }
     .badge-orange { background: var(--amber-bg); color: var(--amber-text); }
-
-    /* Panels */
     .panel { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
     .panel-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
     .panel-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem; }
     .panel-admin { border-color: var(--purple-border); }
-    .panel-amber { border-color: var(--amber-border); background: var(--amber-bg); }
-
-    /* Form groups */
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
     .form-group input, .form-group select, .form-group textarea { width: 100%; }
     .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
     .form-row .form-group { flex: 1; min-width: 140px; }
-
-    /* Buttons */
-    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; font-weight: 400; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); background: transparent; color: var(--text); cursor: pointer; font-family: inherit; transition: background 0.12s; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); background: transparent; color: var(--text); cursor: pointer; font-family: inherit; transition: background 0.12s; }
     .btn:hover { background: var(--bg-secondary); }
     .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
     .btn-primary { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple-text); }
     .btn-primary:hover { background: #CECBF6; }
     .btn-teal { background: var(--teal-bg); border-color: var(--teal-border); color: var(--teal-text); }
@@ -85,15 +66,11 @@
     .btn-amber:hover { background: #FAC775; }
     .btn-danger { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
     .btn-sm { padding: 4px 10px; font-size: 12px; }
-    .btn-full { width: 100%; justify-content: center; }
+    .btn-full { width: 100%; justify-content: center; margin-top: 4px; }
     .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-
-    /* Notices */
     .notice { background: var(--bg-secondary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem; }
     .notice-amber { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber-text); }
     .notice-teal { background: var(--teal-bg); border-color: var(--teal-border); color: var(--teal-text); }
-
-    /* Idea cards */
     .idea-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
     .idea-card.mine { border-left: 3px solid var(--purple-border); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
     .idea-card.flagged { border-left: 3px solid var(--amber-border); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
@@ -103,12 +80,8 @@
     .idea-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .idea-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
     .badge-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-
-    /* Avatars */
     .avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; flex-shrink: 0; }
     .anon-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--bg-secondary); border: 0.5px solid var(--border-md); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; color: var(--text-secondary); }
-
-    /* Comments */
     .qa-section { border-top: 0.5px solid var(--border); padding-top: 10px; margin-top: 10px; }
     .qa-title { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; }
     .comment { display: flex; gap: 8px; margin-bottom: 8px; }
@@ -117,14 +90,10 @@
     .comment-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
     .comment-input-row { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; }
     .comment-input-row textarea { flex: 1; min-height: 38px; font-size: 13px; }
-
-    /* Flagging */
     .flag-section { border-top: 0.5px solid var(--border); padding-top: 10px; margin-top: 8px; }
     .flag-notice { background: var(--amber-bg); border: 0.5px solid var(--amber-border); border-radius: var(--radius-md); padding: 8px 12px; font-size: 12px; color: var(--amber-text); margin-bottom: 8px; }
     .flag-input-row { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
     .flag-input-row input { flex: 1; font-size: 12px; }
-
-    /* Voting */
     .votes-bar { background: var(--bg-secondary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
     .vote-dots { display: flex; gap: 4px; }
     .vote-dot { width: 11px; height: 11px; border-radius: 50%; }
@@ -137,16 +106,12 @@
     .bar-fill-teal { background: #1D9E75; }
     .bar-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
     .bar-votes { font-size: 12px; color: var(--text-secondary); min-width: 56px; }
-
-    /* Merge */
     .merge-list { margin-top: 1rem; border-top: 0.5px solid var(--border); padding-top: 1rem; }
     .merge-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
     .merge-item:last-child { border-bottom: none; }
     .merge-item input[type=checkbox] { margin-top: 3px; flex-shrink: 0; width: 15px; height: 15px; cursor: pointer; }
     .merge-item-title { font-size: 13px; font-weight: 500; }
     .merge-item-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-
-    /* Results */
     .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 1.25rem; }
     .stat-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 1rem; text-align: center; }
     .stat-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
@@ -158,32 +123,44 @@
     .result-body { flex: 1; }
     .result-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
     .result-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-
-    /* Loading / empty */
     .loading { text-align: center; padding: 3rem; color: var(--text-secondary); font-size: 14px; }
     .empty { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 14px; }
     .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--purple-text); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Login screen */
-    .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .login-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 380px; text-align: center; }
-    .login-card h2 { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
-    .login-card p { font-size: 13px; color: var(--text-secondary); margin-bottom: 1.5rem; }
-    .login-card select { width: 100%; margin-bottom: 1rem; }
+    .auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .auth-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 400px; }
+    .auth-card h2 { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+    .auth-card .subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5; }
+    .auth-card input[type=email] { width: 100%; margin-bottom: 12px; }
+    .error-msg { font-size: 13px; color: var(--red-text); background: var(--red-bg); border: 0.5px solid var(--red-border); border-radius: var(--radius-md); padding: 8px 12px; margin-bottom: 1rem; }
+    .success-msg { font-size: 13px; color: var(--teal-text); background: var(--teal-bg); border: 0.5px solid var(--teal-border); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 1rem; line-height: 1.5; }
+    .signout-btn { font-size: 12px; color: var(--text-secondary); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0; font-family: inherit; }
+    .signout-btn:hover { color: var(--text); }
   </style>
 </head>
 <body>
-
 <div id="root"><div class="loading"><div class="spinner"></div><br>Loading...</div></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://tlbekvrkqcpxzzkwslpx.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRsYmVrdnJrcWNweHp6a3dzbHB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3ODA5NzEsImV4cCI6MjA5MTM1Njk3MX0.Vg23_217SF0mc2q7jbXSuxSQ0t4XTt-a5QG7sFC2YZU";
 const ADMIN = "Andy Auffant";
-const TEAM = ["Anand Banthia","Andrew Caldwell","Angela Shrunk","Andy Auffant","Kelsey Abel","Paige Gardner","Tracy Friend"];
 const VOTES_PER_PERSON = 5;
 const CATEGORIES = ["Operational efficiency","Client delivery","Team development","Knowledge management","Business development","Culture & wellbeing","Technology & tools"];
+
+// ── Email → display name map ─────────────────────────────────────────────────
+// Add each team member's work email below once confirmed
+const EMAIL_TO_NAME = {
+  "andy.auffant@accordion.com": "Andy Auffant",
+  // "anand.banthia@accordion.com": "Anand Banthia",
+  // "andrew.caldwell@accordion.com": "Andrew Caldwell",
+  // "angela.shrunk@accordion.com": "Angela Shrunk",
+  // "kelsey.abel@accordion.com": "Kelsey Abel",
+  // "paige.gardner@accordion.com": "Paige Gardner",
+  // "tracy.friend@accordion.com": "Tracy Friend",
+};
+
 const AVATARS = {
   "Anand Banthia":   { color:"#E1F5EE", text:"#085041", initials:"AB" },
   "Andrew Caldwell": { color:"#FAEEDA", text:"#854F0B", initials:"AC" },
@@ -194,9 +171,11 @@ const AVATARS = {
   "Tracy Friend":    { color:"#FAECE7", text:"#993C1D", initials:"TF" },
 };
 
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 // ── API helpers ──────────────────────────────────────────────────────────────
 async function api(path, method="GET", body=null) {
-  const opts = { method, headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", "Prefer": method==="POST"?"return=representation":"" } };
+  const opts = { method, headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", "Prefer": method==="POST"?"return=representation":"" }};
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, opts);
   if (!res.ok) { const e = await res.text(); throw new Error(e); }
@@ -204,503 +183,353 @@ async function api(path, method="GET", body=null) {
   return text ? JSON.parse(text) : null;
 }
 const db = {
-  getState:    ()       => api("app_state?id=eq.1"),
-  setState:    (phase)  => api("app_state?id=eq.1", "PATCH", { phase, updated_at: new Date().toISOString() }),
-  getIdeas:    ()       => api("ideas?order=created_at.asc"),
-  addIdea:     (data)   => api("ideas", "POST", data),
-  updateIdea:  (id, d)  => api(`ideas?id=eq.${id}`, "PATCH", d),
-  deleteIdea:  (id)     => api(`ideas?id=eq.${id}`, "DELETE"),
-  getComments: ()       => api("comments?order=created_at.asc"),
-  addComment:  (data)   => api("comments", "POST", data),
-  getFlags:    ()       => api("flags?order=created_at.asc"),
-  addFlag:     (data)   => api("flags", "POST", data),
-  updateFlag:  (id, d)  => api(`flags?id=eq.${id}`, "PATCH", d),
-  deleteFlag:  (ideaId, author) => api(`flags?idea_id=eq.${ideaId}&author=eq.${encodeURIComponent(author)}`, "DELETE"),
-  getVotes:    ()       => api("votes?order=updated_at.asc"),
-  upsertVote:  (data)   => api("votes", "POST", {...data, updated_at: new Date().toISOString()}),
-  patchVote:   (ideaId, author, count) => api(`votes?idea_id=eq.${ideaId}&author=eq.${encodeURIComponent(author)}`, "PATCH", { count, updated_at: new Date().toISOString() }),
-  deleteVotesForIdea: (id) => api(`votes?idea_id=eq.${id}`, "DELETE"),
+  getState:    ()        => api("app_state?id=eq.1"),
+  setState:    (phase)   => api("app_state?id=eq.1","PATCH",{phase,updated_at:new Date().toISOString()}),
+  getIdeas:    ()        => api("ideas?order=created_at.asc"),
+  addIdea:     (d)       => api("ideas","POST",d),
+  updateIdea:  (id,d)    => api(`ideas?id=eq.${id}`,"PATCH",d),
+  deleteIdea:  (id)      => api(`ideas?id=eq.${id}`,"DELETE"),
+  getComments: ()        => api("comments?order=created_at.asc"),
+  addComment:  (d)       => api("comments","POST",d),
+  getFlags:    ()        => api("flags?order=created_at.asc"),
+  addFlag:     (d)       => api("flags","POST",d),
+  updateFlag:  (id,d)    => api(`flags?id=eq.${id}`,"PATCH",d),
+  deleteFlag:  (iid,au)  => api(`flags?idea_id=eq.${iid}&author=eq.${encodeURIComponent(au)}`,"DELETE"),
+  getVotes:    ()        => api("votes?order=updated_at.asc"),
+  upsertVote:  (d)       => api("votes","POST",{...d,updated_at:new Date().toISOString()}),
+  patchVote:   (iid,au,c)=> api(`votes?idea_id=eq.${iid}&author=eq.${encodeURIComponent(au)}`,"PATCH",{count:c,updated_at:new Date().toISOString()}),
+  deleteVotes: (id)      => api(`votes?idea_id=eq.${id}`,"DELETE"),
 };
 
-// ── App state ────────────────────────────────────────────────────────────────
-let currentUser = null;
-let phase = 0;
-let ideas = [], comments = [], flags = [], votes = [];
-let editingId = null, editDraft = {};
-let showMergePanel = false, mergeSelections = {};
-let commentDrafts = {}, flagDrafts = {};
-let loading = false;
+// ── State ────────────────────────────────────────────────────────────────────
+let currentUser=null, userEmail=null, phase=0;
+let ideas=[], comments=[], flags=[], votes=[];
+let editingId=null, editDraft={};
+let showMergePanel=false, mergeSelections={};
+let commentDrafts={}, flagDrafts={};
+let appLoading=true;
 
-function isAdmin() { return currentUser === ADMIN; }
-function myVotesUsed() { return votes.filter(v=>v.author===currentUser).reduce((s,v)=>s+v.count,0); }
-function myVotesRemaining() { return VOTES_PER_PERSON - myVotesUsed(); }
-function votesForIdea(id) { return votes.filter(v=>v.idea_id===id).reduce((s,v)=>s+v.count,0); }
-function myVotesForIdea(id) { return (votes.find(v=>v.idea_id===id&&v.author===currentUser)||{count:0}).count; }
-function maxVotes() { const s=ideas.filter(i=>i.submitted).map(i=>votesForIdea(i.id)); return Math.max(1,...s); }
-function flagsForIdea(id) { return flags.filter(f=>f.idea_id===id); }
-function commentsForIdea(id) { return comments.filter(c=>c.idea_id===id); }
+function isAdmin(){ return currentUser===ADMIN; }
+function myVotesUsed(){ return votes.filter(v=>v.author===currentUser).reduce((s,v)=>s+v.count,0); }
+function myVotesRemaining(){ return VOTES_PER_PERSON-myVotesUsed(); }
+function votesForIdea(id){ return votes.filter(v=>v.idea_id===id).reduce((s,v)=>s+v.count,0); }
+function myVotesForIdea(id){ return (votes.find(v=>v.idea_id===id&&v.author===currentUser)||{count:0}).count; }
+function maxVotes(){ const s=ideas.filter(i=>i.submitted).map(i=>votesForIdea(i.id)); return Math.max(1,...s); }
+function flagsForIdea(id){ return flags.filter(f=>f.idea_id===id); }
+function commentsForIdea(id){ return comments.filter(c=>c.idea_id===id); }
+function esc(s){ if(!s) return ""; return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-function esc(s) { if(!s) return ""; return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
-function avatarEl(name, size=26) {
-  const a = AVATARS[name]||{color:"#F1EFE8",text:"#5F5E5A",initials:name.slice(0,2).toUpperCase()};
+function avatarEl(name,size=26){
+  const a=AVATARS[name]||{color:"#F1EFE8",text:"#5F5E5A",initials:(name||"?").slice(0,2).toUpperCase()};
   return `<div class="avatar" style="width:${size}px;height:${size}px;background:${a.color};color:${a.text};">${a.initials}</div>`;
 }
-function anonEl(size=26) { return `<div class="anon-avatar" style="width:${size}px;height:${size}px;">?</div>`; }
-
-function displayAuthor(idea, mode) {
-  const mine = idea.author === currentUser;
-  const anon = mode==="p1"||mode==="p2"||mode==="results";
-  if (anon && !mine) return { av: anonEl(), name: `<em>Anonymous</em>` };
-  const label = mine && anon ? `${esc(idea.author)} <em style="opacity:0.6;">(you)</em>` : esc(idea.author);
-  return { av: avatarEl(idea.author), name: label };
+function anonEl(size=26){ return `<div class="anon-avatar" style="width:${size}px;height:${size}px;">?</div>`; }
+function displayAuthor(idea,mode){
+  const mine=idea.author===currentUser;
+  const anon=mode==="p1"||mode==="p2"||mode==="results";
+  if(anon&&!mine) return {av:anonEl(),name:`<em>Anonymous</em>`};
+  const label=mine&&anon?`${esc(idea.author)} <em style="opacity:0.6;">(you)</em>`:esc(idea.author);
+  return {av:avatarEl(idea.author),name:label};
 }
 
-// ── Data loading ─────────────────────────────────────────────────────────────
-async function loadAll() {
-  loading = true; render();
-  try {
-    const [stateArr, ideasArr, commentsArr, flagsArr, votesArr] = await Promise.all([
-      db.getState(), db.getIdeas(), db.getComments(), db.getFlags(), db.getVotes()
-    ]);
-    phase = stateArr[0]?.phase ?? 0;
-    ideas = ideasArr || [];
-    comments = commentsArr || [];
-    flags = flagsArr || [];
-    votes = votesArr || [];
-  } catch(e) { alert("Error loading data: " + e.message); }
-  loading = false; render();
+// ── Auth ─────────────────────────────────────────────────────────────────────
+async function initAuth(){
+  const {data:{session}} = await supabaseClient.auth.getSession();
+  if(session?.user?.email){
+    const name = EMAIL_TO_NAME[session.user.email.toLowerCase()];
+    if(name){ userEmail=session.user.email; currentUser=name; await loadAll(); }
+    else renderUnauthorized(session.user.email);
+  } else { appLoading=false; renderLoginScreen(); }
+}
+
+async function sendMagicLink(email){
+  const normalized=email.trim().toLowerCase();
+  if(!EMAIL_TO_NAME[normalized]){ renderLoginScreen("That email address isn't on the team roster. Please check with Andy and try again."); return; }
+  const {error} = await supabaseClient.auth.signInWithOtp({ email:normalized, options:{emailRedirectTo:window.location.origin+window.location.pathname} });
+  if(error) renderLoginScreen("Something went wrong: "+error.message);
+  else renderCheckEmail(normalized);
+}
+
+async function signOut(){
+  await supabaseClient.auth.signOut();
+  currentUser=null; userEmail=null; ideas=[]; comments=[]; flags=[]; votes=[];
+  renderLoginScreen();
+}
+
+// ── Data ─────────────────────────────────────────────────────────────────────
+async function loadAll(){
+  appLoading=true; render();
+  try{
+    const [sa,ia,ca,fa,va] = await Promise.all([db.getState(),db.getIdeas(),db.getComments(),db.getFlags(),db.getVotes()]);
+    phase=sa[0]?.phase??0; ideas=ia||[]; comments=ca||[]; flags=fa||[]; votes=va||[];
+  } catch(e){ alert("Error loading data: "+e.message); }
+  appLoading=false; render();
 }
 
 // ── Actions ──────────────────────────────────────────────────────────────────
-async function setPhase(p) {
-  if (!isAdmin()) return;
-  await db.setState(p);
-  phase = p; showMergePanel=false; mergeSelections={};
-  render();
+async function setPhase(p){ if(!isAdmin()) return; await db.setState(p); phase=p; showMergePanel=false; mergeSelections={}; render(); }
+async function submitIdea(draft,submitted){
+  const res=await db.addIdea({author:currentUser,title:draft.title.trim(),category:draft.category,description:draft.description.trim(),impact:draft.impact||null,effort:draft.effort||null,submitted,merged:false,merged_authors:[],phase_created:0});
+  ideas.push(res[0]); render();
 }
-
-async function submitIdea(draft, submitted) {
-  const data = { author: currentUser, title: draft.title.trim(), category: draft.category, description: draft.description.trim(), impact: draft.impact||null, effort: draft.effort||null, submitted, merged: false, merged_authors: [], phase_created: 0 };
-  const res = await db.addIdea(data);
-  ideas.push(res[0]);
-  render();
-}
-
-async function finalizeIdea(id) {
-  await db.updateIdea(id, { submitted: true });
-  const idea = ideas.find(i=>i.id===id); if(idea) idea.submitted=true;
-  render();
-}
-
-async function saveEdit(id) {
-  await db.updateIdea(id, { title: editDraft.title, category: editDraft.category, description: editDraft.description, impact: editDraft.impact||null, effort: editDraft.effort||null });
-  const idea = ideas.find(i=>i.id===id);
-  if (idea) Object.assign(idea, editDraft);
+async function finalizeIdea(id){ await db.updateIdea(id,{submitted:true}); const i=ideas.find(i=>i.id===id); if(i) i.submitted=true; render(); }
+async function saveEdit(id){
+  await db.updateIdea(id,{title:editDraft.title,category:editDraft.category,description:editDraft.description,impact:editDraft.impact||null,effort:editDraft.effort||null});
+  const i=ideas.find(i=>i.id===id); if(i) Object.assign(i,editDraft);
   editingId=null; render();
 }
-
-async function deleteIdea(id) {
-  if (!confirm("Delete this idea?")) return;
+async function deleteIdea(id){
+  if(!confirm("Delete this idea?")) return;
   await db.deleteIdea(id);
-  ideas = ideas.filter(i=>i.id!==id);
-  comments = comments.filter(c=>c.idea_id!==id);
-  flags = flags.filter(f=>f.idea_id!==id);
-  votes = votes.filter(v=>v.idea_id!==id);
-  render();
+  ideas=ideas.filter(i=>i.id!==id); comments=comments.filter(c=>c.idea_id!==id);
+  flags=flags.filter(f=>f.idea_id!==id); votes=votes.filter(v=>v.idea_id!==id); render();
 }
-
-async function addComment(ideaId, text) {
-  if (!text.trim()) return;
-  const res = await db.addComment({ idea_id: ideaId, author: currentUser, text: text.trim() });
-  comments.push(res[0]);
-  commentDrafts[ideaId]=""; render();
+async function addComment(ideaId,text){
+  if(!text.trim()) return;
+  const res=await db.addComment({idea_id:ideaId,author:currentUser,text:text.trim()});
+  comments.push(res[0]); commentDrafts[ideaId]=""; render();
 }
-
-async function flagIdea(ideaId, note) {
-  if (!note.trim()) { alert("Please note which idea this is similar to."); return; }
-  const existing = flags.find(f=>f.idea_id===ideaId&&f.author===currentUser);
-  if (existing) {
-    await db.updateFlag(existing.id, { note: note.trim() });
-    existing.note = note.trim();
-  } else {
-    const res = await db.addFlag({ idea_id: ideaId, author: currentUser, note: note.trim() });
-    flags.push(res[0]);
-  }
+async function flagIdea(ideaId,note){
+  if(!note.trim()){alert("Please note which idea this is similar to.");return;}
+  const existing=flags.find(f=>f.idea_id===ideaId&&f.author===currentUser);
+  if(existing){await db.updateFlag(existing.id,{note:note.trim()});existing.note=note.trim();}
+  else{const res=await db.addFlag({idea_id:ideaId,author:currentUser,note:note.trim()});flags.push(res[0]);}
   flagDrafts[ideaId]=""; render();
 }
-
-async function unflag(ideaId) {
-  await db.deleteFlag(ideaId, currentUser);
-  flags = flags.filter(f=>!(f.idea_id===ideaId&&f.author===currentUser));
+async function unflag(ideaId){ await db.deleteFlag(ideaId,currentUser); flags=flags.filter(f=>!(f.idea_id===ideaId&&f.author===currentUser)); render(); }
+async function castVote(ideaId,delta){
+  const cur=myVotesForIdea(ideaId), newVal=Math.max(0,cur+delta), diff=newVal-cur;
+  if(diff>0&&myVotesRemaining()<diff) return;
+  const existing=votes.find(v=>v.idea_id===ideaId&&v.author===currentUser);
+  if(existing){await db.patchVote(ideaId,currentUser,newVal);existing.count=newVal;}
+  else{const res=await db.upsertVote({idea_id:ideaId,author:currentUser,count:newVal});votes.push(res?.[0]||{idea_id:ideaId,author:currentUser,count:newVal});}
   render();
 }
-
-async function castVote(ideaId, delta) {
-  const cur = myVotesForIdea(ideaId);
-  const newVal = Math.max(0, cur+delta);
-  const diff = newVal - cur;
-  if (diff>0 && myVotesRemaining()<diff) return;
-  const existing = votes.find(v=>v.idea_id===ideaId&&v.author===currentUser);
-  if (existing) {
-    await db.patchVote(ideaId, currentUser, newVal);
-    existing.count = newVal;
-  } else {
-    const res = await db.upsertVote({ idea_id: ideaId, author: currentUser, count: newVal });
-    if (res && res[0]) votes.push(res[0]);
-    else votes.push({ idea_id: ideaId, author: currentUser, count: newVal });
-  }
-  render();
+async function executeMerge(){
+  const ids=Object.keys(mergeSelections).filter(k=>mergeSelections[k]);
+  if(ids.length<2){alert("Select at least 2 ideas to merge.");return;}
+  const selected=ids.map(id=>ideas.find(i=>i.id===id)).filter(Boolean);
+  const primary=selected[0];
+  const allAuthors=[...new Set(selected.flatMap(i=>[i.author,...(i.merged_authors||[])]))];
+  const allComments=selected.flatMap(i=>commentsForIdea(i.id));
+  const newIdea=await db.addIdea({author:primary.author,title:primary.title,category:primary.category,description:primary.description,impact:primary.impact,effort:primary.effort,submitted:true,merged:true,merged_authors:allAuthors.filter(a=>a!==primary.author),phase_created:1});
+  const newId=newIdea[0].id;
+  for(const c of allComments) await db.addComment({idea_id:newId,author:c.author,text:c.text});
+  for(const id of ids){await db.deleteVotes(id);await db.deleteIdea(id);}
+  mergeSelections={}; showMergePanel=false; await loadAll();
 }
 
-async function executeMerge() {
-  const selectedIds = Object.keys(mergeSelections).filter(k=>mergeSelections[k]);
-  if (selectedIds.length < 2) { alert("Select at least 2 ideas to merge."); return; }
-  const selected = selectedIds.map(id=>ideas.find(i=>i.id===id)).filter(Boolean);
-  const primary = selected[0];
-  const allAuthors = [...new Set(selected.flatMap(i=>[i.author,...(i.merged_authors||[])]))];
-  const mergedAuthors = allAuthors.filter(a=>a!==primary.author);
-  const allComments = selected.flatMap(i=>commentsForIdea(i.id));
-
-  const newIdea = await db.addIdea({ author: primary.author, title: primary.title, category: primary.category, description: primary.description, impact: primary.impact, effort: primary.effort, submitted: true, merged: true, merged_authors: mergedAuthors, phase_created: 1 });
-  const newIdeaId = newIdea[0].id;
-
-  for (const c of allComments) { await db.addComment({ idea_id: newIdeaId, author: c.author, text: c.text }); }
-  for (const id of selectedIds) {
-    await db.deleteVotesForIdea(id);
-    await db.deleteIdea(id);
-  }
-
-  mergeSelections={}; showMergePanel=false;
-  await loadAll();
-}
-
-// ── Rendering ────────────────────────────────────────────────────────────────
-function ideaCard(idea, mode) {
-  const ismine = idea.author===currentUser;
-  const isEditing = editingId===idea.id;
-  const { av, name } = displayAuthor(idea, mode);
-  const ideaFlags = flagsForIdea(idea.id);
-  const ideaComments = commentsForIdea(idea.id);
-  const isFlagged = ideaFlags.length > 0;
-  const myFlag = ideaFlags.find(f=>f.author===currentUser);
-  const totalV = votesForIdea(idea.id);
-  const myV = myVotesForIdea(idea.id);
-  const maxV = maxVotes();
-
-  let cls = "idea-card";
-  if (ismine) cls += " mine";
-  if (isFlagged && mode==="p1") cls += " flagged";
-
-  let h = `<div class="${cls}">`;
-
-  if (isEditing) {
-    h += `<div class="form-group"><label>Title</label><input type="text" id="edit-title" value="${esc(editDraft.title)}"></div>`;
-    h += `<div class="form-row">`;
-    h += `<div class="form-group"><label>Category</label><select id="edit-cat">${CATEGORIES.map(c=>`<option value="${c}" ${editDraft.category===c?"selected":""}>${c}</option>`).join("")}</select></div>`;
-    h += `<div class="form-group"><label>Impact</label><select id="edit-impact"><option value="">—</option>${["High","Medium","Low"].map(v=>`<option ${editDraft.impact===v?"selected":""}>${v}</option>`).join("")}</select></div>`;
-    h += `<div class="form-group"><label>Effort</label><select id="edit-effort"><option value="">—</option>${["High","Medium","Low"].map(v=>`<option ${editDraft.effort===v?"selected":""}>${v}</option>`).join("")}</select></div>`;
-    h += `</div><div class="form-group"><label>Description</label><textarea id="edit-desc">${esc(editDraft.description)}</textarea></div>`;
-    h += `<div class="btn-row"><button class="btn btn-primary btn-sm" onclick="commitEdit('${idea.id}')">Save changes</button><button class="btn btn-sm" onclick="cancelEdit()">Cancel</button></div>`;
-    h += `</div>`; return h;
-  }
-
-  h += `<div class="idea-header"><div><div class="idea-title">${esc(idea.title)}</div>`;
-  h += `<div class="idea-meta">${av} ${name}`;
-  if (idea.merged && idea.merged_authors?.length) {
-    const showNames = mode!=="p1"&&mode!=="p2";
-    h += showNames ? ` &middot; <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>` : ` &middot; <em style="font-size:11px;">merged idea</em>`;
-  }
-  h += ` &middot; ${esc(idea.category||"Uncategorized")}</div></div>`;
-  h += `<div class="badge-row">`;
-  if (idea.merged) h += `<span class="badge badge-orange">Merged</span>`;
-  if (idea.impact) h += `<span class="badge badge-green">Impact: ${esc(idea.impact)}</span>`;
-  if (idea.effort) h += `<span class="badge badge-amber">Effort: ${esc(idea.effort)}</span>`;
-  if (!idea.submitted) h += `<span class="badge badge-gray">Draft</span>`;
-  if (isFlagged && mode==="p1") h += `<span class="badge badge-amber">${ideaFlags.length} similar flag${ideaFlags.length!==1?"s":""}</span>`;
-  h += `</div></div>`;
-  h += `<div class="idea-desc">${esc(idea.description)}</div>`;
-
-  if (mode==="p2") {
-    h += `<div class="vote-section">`;
-    h += `<button class="btn btn-sm" onclick="vote('${idea.id}',-1)" ${myV===0?"disabled":""}>−</button>`;
-    h += `<div style="text-align:center;"><div class="vote-count">${myV}</div><div class="vote-label">your votes</div></div>`;
-    h += `<button class="btn btn-sm btn-primary" onclick="vote('${idea.id}',1)" ${myVotesRemaining()===0&&myV===0?"disabled":""}>+</button>`;
-    h += `<div style="flex:1;"><div class="bar-bg"><div class="bar-fill bar-fill-purple" style="width:${Math.round(totalV/maxV*100)}%"></div></div>`;
-    h += `<div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">${totalV} total vote${totalV!==1?"s":""}</div></div></div>`;
-  }
-
-  if (mode==="p0") {
-    h += `<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button>`;
-    if (!idea.submitted) {
-      h += `<button class="btn btn-sm btn-primary" onclick="finalize('${idea.id}')">Submit for Phase 2 →</button>`;
-      h += `<button class="btn btn-sm btn-danger" onclick="del('${idea.id}')">Delete</button>`;
-    }
-    h += `</div>`;
-  }
-
-  if (mode==="p1") {
-    if (ismine) h += `<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button></div>`;
-    h += `<div class="qa-section"><div class="qa-title">Q&A & comments (${ideaComments.length})</div>`;
-    ideaComments.forEach(c => {
-      const isMine = c.author===currentUser;
-      const cAv = isMine ? avatarEl(c.author) : anonEl();
-      const cName = isMine ? `${esc(c.author)} <em style="opacity:0.6;">(you)</em>` : `<em>Anonymous</em>`;
-      h += `<div class="comment">${cAv}<div class="comment-body"><div class="comment-who">${cName}</div><div class="comment-text">${esc(c.text)}</div></div></div>`;
-    });
-    h += `<div class="comment-input-row">${avatarEl(currentUser)}`;
-    h += `<textarea id="cmt-${idea.id}" placeholder="Ask a question or leave a comment..." onchange="commentDrafts['${idea.id}']=this.value">${esc(commentDrafts[idea.id]||"")}</textarea>`;
-    h += `<button class="btn btn-sm btn-primary" onclick="submitComment('${idea.id}')">Post</button></div></div>`;
-    h += `<div class="flag-section">`;
-    if (ideaFlags.length > 0) {
-      h += `<div class="flag-notice">`;
-      ideaFlags.forEach(f => { h += `<div style="margin-bottom:3px;">${f.author===currentUser?"You flagged":"Someone flagged"} as similar to: <em>${esc(f.note)}</em></div>`; });
-      h += `</div>`;
-    }
-    if (myFlag) {
-      h += `<button class="btn btn-sm" onclick="removeflag('${idea.id}')">Remove my flag</button>`;
-    } else {
-      h += `<div class="flag-input-row"><input type="text" id="flag-${idea.id}" placeholder='Similar to: "Idea title..."' value="${esc(flagDrafts[idea.id]||"")}" onchange="flagDrafts['${idea.id}']=this.value">`;
-      h += `<button class="btn btn-sm btn-amber" onclick="submitFlag('${idea.id}')">Flag as similar</button></div>`;
-    }
-    h += `</div>`;
-  }
-
-  if (mode==="p1draft") {
-    h += `<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button>`;
-    h += `<button class="btn btn-sm btn-primary" onclick="finalize('${idea.id}')">Submit for Phase 2 →</button>`;
-    h += `<button class="btn btn-sm btn-danger" onclick="del('${idea.id}')">Delete</button></div>`;
-  }
-
-  h += `</div>`; return h;
-}
-
-// ── Event handlers (called from inline onclick) ───────────────────────────────
-window.vote = (id,d) => castVote(id,d);
-window.startEdit = (id) => { const idea=ideas.find(i=>i.id===id); if(!idea) return; editingId=id; editDraft={title:idea.title,category:idea.category,description:idea.description,impact:idea.impact||"",effort:idea.effort||""}; render(); };
-window.commitEdit = (id) => { editDraft.title=document.getElementById("edit-title")?.value||editDraft.title; editDraft.category=document.getElementById("edit-cat")?.value||editDraft.category; editDraft.description=document.getElementById("edit-desc")?.value||editDraft.description; editDraft.impact=document.getElementById("edit-impact")?.value||""; editDraft.effort=document.getElementById("edit-effort")?.value||""; saveEdit(id); };
-window.cancelEdit = () => { editingId=null; render(); };
-window.finalize = (id) => finalizeIdea(id);
-window.del = (id) => deleteIdea(id);
-window.submitComment = (id) => { const el=document.getElementById(`cmt-${id}`); addComment(id, el?.value||commentDrafts[id]||""); };
-window.submitFlag = (id) => { const el=document.getElementById(`flag-${id}`); flagIdea(id, el?.value||flagDrafts[id]||""); };
-window.removeflag = (id) => unflag(id);
-window.toggleMerge = () => { showMergePanel=!showMergePanel; mergeSelections={}; render(); };
-window.toggleMergeItem = (id) => { mergeSelections[id]=!mergeSelections[id]; render(); };
-window.doMerge = () => executeMerge();
-window.adminGoPhase = (p) => {
-  if (!isAdmin()) return;
-  if (p===3 && phase<3) return;
-  setPhase(p);
+// ── Inline handlers ──────────────────────────────────────────────────────────
+window.vote=(id,d)=>castVote(id,d);
+window.startEdit=(id)=>{const i=ideas.find(i=>i.id===id);if(!i)return;editingId=id;editDraft={title:i.title,category:i.category,description:i.description,impact:i.impact||"",effort:i.effort||""};render();};
+window.commitEdit=(id)=>{editDraft.title=document.getElementById("edit-title")?.value||editDraft.title;editDraft.category=document.getElementById("edit-cat")?.value||editDraft.category;editDraft.description=document.getElementById("edit-desc")?.value||editDraft.description;editDraft.impact=document.getElementById("edit-impact")?.value||"";editDraft.effort=document.getElementById("edit-effort")?.value||"";saveEdit(id);};
+window.cancelEdit=()=>{editingId=null;render();};
+window.finalize=(id)=>finalizeIdea(id);
+window.del=(id)=>deleteIdea(id);
+window.submitComment=(id)=>{const el=document.getElementById(`cmt-${id}`);addComment(id,el?.value||commentDrafts[id]||"");};
+window.submitFlag=(id)=>{const el=document.getElementById(`flag-${id}`);flagIdea(id,el?.value||flagDrafts[id]||"");};
+window.removeflag=(id)=>unflag(id);
+window.toggleMerge=()=>{showMergePanel=!showMergePanel;mergeSelections={};render();};
+window.toggleMergeItem=(id)=>{mergeSelections[id]=!mergeSelections[id];render();};
+window.doMerge=()=>executeMerge();
+window.adminGoPhase=(p)=>{if(!isAdmin())return;if(p===3&&phase<3)return;setPhase(p);};
+window.advancePhase=()=>setPhase(phase+1);
+window.closeVoting=()=>setPhase(3);
+window.doSignOut=()=>signOut();
+window.doSendLink=()=>{const email=document.getElementById("login-email")?.value||"";if(!email.trim()){alert("Please enter your email address.");return;}sendMagicLink(email.trim());};
+window.submitForm=(submitted)=>{
+  const title=document.getElementById("d-title")?.value||"";
+  const category=document.getElementById("d-cat")?.value||"";
+  const description=document.getElementById("d-desc")?.value||"";
+  const impact=document.getElementById("d-impact")?.value||"";
+  const effort=document.getElementById("d-effort")?.value||"";
+  if(submitted&&(!title.trim()||!category||!description.trim())){alert("Please fill in the title, category, and description.");return;}
+  if(!submitted&&!title.trim()){alert("Give your idea a title first.");return;}
+  submitIdea({title,category,description,impact,effort},submitted);
 };
-window.advancePhase = () => setPhase(phase+1);
-window.closeVoting = () => setPhase(3);
 
-function render() {
-  if (!currentUser) { renderLogin(); return; }
-  if (loading) { document.getElementById("root").innerHTML=`<div class="loading"><div class="spinner"></div><br>Loading...</div>`; return; }
+// ── Auth screens ─────────────────────────────────────────────────────────────
+function renderLoginScreen(errorMsg=""){
+  document.getElementById("root").innerHTML=`
+    <div class="auth-screen"><div class="auth-card">
+      <h2>LPI 2026 goals</h2>
+      <p class="subtitle">Enter your Accordion email and we'll send you a magic link to sign in — no password needed.</p>
+      ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
+      <div class="form-group"><input type="email" id="login-email" placeholder="your.name@accordion.com" style="width:100%;" onkeydown="if(event.key==='Enter')doSendLink()"></div>
+      <button class="btn btn-primary btn-full" onclick="doSendLink()">Send magic link →</button>
+    </div></div>`;
+  setTimeout(()=>document.getElementById("login-email")?.focus(),100);
+}
+function renderCheckEmail(email){
+  document.getElementById("root").innerHTML=`
+    <div class="auth-screen"><div class="auth-card">
+      <h2>Check your email</h2>
+      <div class="success-msg">We sent a magic link to <strong>${esc(email)}</strong>.<br>Click the link to sign in — it expires in 1 hour.</div>
+      <p class="subtitle">Didn't get it? Check your spam folder, or <button class="signout-btn" onclick="renderLoginScreen()">try again</button>.</p>
+    </div></div>`;
+}
+function renderUnauthorized(email){
+  document.getElementById("root").innerHTML=`
+    <div class="auth-screen"><div class="auth-card">
+      <h2>Not authorized</h2>
+      <div class="error-msg">The email <strong>${esc(email)}</strong> isn't on the team roster. Please contact Andy Auffant to be added.</div>
+      <button class="btn btn-full" onclick="doSignOut()">Sign out</button>
+    </div></div>`;
+}
 
-  const submitted = ideas.filter(i=>i.submitted);
-  const myIdeas = ideas.filter(i=>i.author===currentUser);
-  const myDrafts = myIdeas.filter(i=>!i.submitted);
-  const mySubmitted = myIdeas.filter(i=>i.submitted);
-  const myUnsubmitted = myIdeas.filter(i=>!i.submitted);
-  const flaggedCount = submitted.filter(i=>flagsForIdea(i.id).length>0).length;
-  const usedVotes = myVotesUsed();
+// ── Idea card ────────────────────────────────────────────────────────────────
+function ideaCard(idea,mode){
+  const ismine=idea.author===currentUser, isEditing=editingId===idea.id;
+  const {av,name}=displayAuthor(idea,mode);
+  const ideaFlags=flagsForIdea(idea.id), ideaComments=commentsForIdea(idea.id);
+  const isFlagged=ideaFlags.length>0, myFlag=ideaFlags.find(f=>f.author===currentUser);
+  const totalV=votesForIdea(idea.id), myV=myVotesForIdea(idea.id), maxV=maxVotes();
+  let cls="idea-card";
+  if(ismine) cls+=" mine";
+  if(isFlagged&&mode==="p1") cls+=" flagged";
+  let h=`<div class="${cls}">`;
+  if(isEditing){
+    h+=`<div class="form-group"><label>Title</label><input type="text" id="edit-title" value="${esc(editDraft.title)}"></div>`;
+    h+=`<div class="form-row"><div class="form-group"><label>Category</label><select id="edit-cat">${CATEGORIES.map(c=>`<option value="${c}" ${editDraft.category===c?"selected":""}>${c}</option>`).join("")}</select></div>`;
+    h+=`<div class="form-group"><label>Impact</label><select id="edit-impact"><option value="">—</option>${["High","Medium","Low"].map(v=>`<option ${editDraft.impact===v?"selected":""}>${v}</option>`).join("")}</select></div>`;
+    h+=`<div class="form-group"><label>Effort</label><select id="edit-effort"><option value="">—</option>${["High","Medium","Low"].map(v=>`<option ${editDraft.effort===v?"selected":""}>${v}</option>`).join("")}</select></div></div>`;
+    h+=`<div class="form-group"><label>Description</label><textarea id="edit-desc">${esc(editDraft.description)}</textarea></div>`;
+    h+=`<div class="btn-row"><button class="btn btn-primary btn-sm" onclick="commitEdit('${idea.id}')">Save changes</button><button class="btn btn-sm" onclick="cancelEdit()">Cancel</button></div>`;
+    h+=`</div>`;return h;
+  }
+  h+=`<div class="idea-header"><div><div class="idea-title">${esc(idea.title)}</div>`;
+  h+=`<div class="idea-meta">${av} ${name}`;
+  if(idea.merged&&idea.merged_authors?.length){const sn=mode!=="p1"&&mode!=="p2";h+=sn?` &middot; <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>`:` &middot; <em style="font-size:11px;">merged idea</em>`;}
+  h+=` &middot; ${esc(idea.category||"Uncategorized")}</div></div>`;
+  h+=`<div class="badge-row">`;
+  if(idea.merged) h+=`<span class="badge badge-orange">Merged</span>`;
+  if(idea.impact) h+=`<span class="badge badge-green">Impact: ${esc(idea.impact)}</span>`;
+  if(idea.effort) h+=`<span class="badge badge-amber">Effort: ${esc(idea.effort)}</span>`;
+  if(!idea.submitted) h+=`<span class="badge badge-gray">Draft</span>`;
+  if(isFlagged&&mode==="p1") h+=`<span class="badge badge-amber">${ideaFlags.length} similar flag${ideaFlags.length!==1?"s":""}</span>`;
+  h+=`</div></div><div class="idea-desc">${esc(idea.description)}</div>`;
+  if(mode==="p2"){
+    h+=`<div class="vote-section"><button class="btn btn-sm" onclick="vote('${idea.id}',-1)" ${myV===0?"disabled":""}>−</button>`;
+    h+=`<div style="text-align:center;"><div class="vote-count">${myV}</div><div class="vote-label">your votes</div></div>`;
+    h+=`<button class="btn btn-sm btn-primary" onclick="vote('${idea.id}',1)" ${myVotesRemaining()===0&&myV===0?"disabled":""}>+</button>`;
+    h+=`<div style="flex:1;"><div class="bar-bg"><div class="bar-fill bar-fill-purple" style="width:${Math.round(totalV/maxV*100)}%"></div></div><div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">${totalV} total vote${totalV!==1?"s":""}</div></div></div>`;
+  }
+  if(mode==="p0"){
+    h+=`<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button>`;
+    if(!idea.submitted){h+=`<button class="btn btn-sm btn-primary" onclick="finalize('${idea.id}')">Submit for Phase 2 →</button><button class="btn btn-sm btn-danger" onclick="del('${idea.id}')">Delete</button>`;}
+    h+=`</div>`;
+  }
+  if(mode==="p1"){
+    if(ismine) h+=`<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button></div>`;
+    h+=`<div class="qa-section"><div class="qa-title">Q&A & comments (${ideaComments.length})</div>`;
+    ideaComments.forEach(c=>{const isMine=c.author===currentUser;const cAv=isMine?avatarEl(c.author):anonEl();const cName=isMine?`${esc(c.author)} <em style="opacity:0.6;">(you)</em>`:`<em>Anonymous</em>`;h+=`<div class="comment">${cAv}<div class="comment-body"><div class="comment-who">${cName}</div><div class="comment-text">${esc(c.text)}</div></div></div>`;});
+    h+=`<div class="comment-input-row">${avatarEl(currentUser)}<textarea id="cmt-${idea.id}" placeholder="Ask a question or leave a comment..." onchange="commentDrafts['${idea.id}']=this.value">${esc(commentDrafts[idea.id]||"")}</textarea><button class="btn btn-sm btn-primary" onclick="submitComment('${idea.id}')">Post</button></div></div>`;
+    h+=`<div class="flag-section">`;
+    if(ideaFlags.length>0){h+=`<div class="flag-notice">`;ideaFlags.forEach(f=>{h+=`<div style="margin-bottom:3px;">${f.author===currentUser?"You flagged":"Someone flagged"} as similar to: <em>${esc(f.note)}</em></div>`;});h+=`</div>`;}
+    if(myFlag){h+=`<button class="btn btn-sm" onclick="removeflag('${idea.id}')">Remove my flag</button>`;}
+    else{h+=`<div class="flag-input-row"><input type="text" id="flag-${idea.id}" placeholder='Similar to: "Idea title..."' value="${esc(flagDrafts[idea.id]||"")}" onchange="flagDrafts['${idea.id}']=this.value"><button class="btn btn-sm btn-amber" onclick="submitFlag('${idea.id}')">Flag as similar</button></div>`;}
+    h+=`</div>`;
+  }
+  if(mode==="p1draft"){h+=`<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button><button class="btn btn-sm btn-primary" onclick="finalize('${idea.id}')">Submit for Phase 2 →</button><button class="btn btn-sm btn-danger" onclick="del('${idea.id}')">Delete</button></div>`;}
+  h+=`</div>`;return h;
+}
 
-  // Phase tabs
-  let tabs = `<div class="phase-bar">`;
-  const tabDefs = [
-    {label:"Phase 1 — Ideation", dot:"dot-green"},
-    {label:"Phase 2 — Refinement", dot:"dot-amber"},
-    {label:"Phase 3 — Voting", dot:"dot-purple"},
-    {label:"Results", dot:"dot-teal"},
-  ];
-  tabDefs.forEach((t,i)=>{
-    const isCur=i===phase, isUnlocked=i<=phase, isResultsLocked=i===3&&phase<3;
+// ── Main render ──────────────────────────────────────────────────────────────
+function render(){
+  if(!currentUser) return;
+  if(appLoading){document.getElementById("root").innerHTML=`<div class="loading"><div class="spinner"></div><br>Loading...</div>`;return;}
+  const submitted=ideas.filter(i=>i.submitted);
+  const myIdeas=ideas.filter(i=>i.author===currentUser);
+  const myDrafts=myIdeas.filter(i=>!i.submitted);
+  const mySubmitted=myIdeas.filter(i=>i.submitted);
+  const myUnsubmitted=myIdeas.filter(i=>!i.submitted);
+  const flaggedCount=submitted.filter(i=>flagsForIdea(i.id).length>0).length;
+  const usedVotes=myVotesUsed();
+
+  let tabs=`<div class="phase-bar">`;
+  [{label:"Phase 1 — Ideation",dot:"dot-green"},{label:"Phase 2 — Refinement",dot:"dot-amber"},{label:"Phase 3 — Voting",dot:"dot-purple"},{label:"Results",dot:"dot-teal"}].forEach((t,i)=>{
+    const isCur=i===phase,isUnlocked=i<=phase,isResultsLocked=i===3&&phase<3;
     let cls="phase-tab";
     if(isCur) cls+=" active";
     if(!isUnlocked||isResultsLocked) cls+=" locked";
     if(isAdmin()&&!isCur&&isUnlocked&&!isResultsLocked) cls+=" admin-nav";
-    const title = isAdmin()&&!isCur&&isUnlocked&&!isResultsLocked?"title='Click to re-open this phase'":"";
+    const title=isAdmin()&&!isCur&&isUnlocked&&!isResultsLocked?"title='Click to re-open this phase'":"";
     tabs+=`<button class="${cls}" onclick="adminGoPhase(${i})" ${title}><span class="phase-dot ${t.dot}"></span>${t.label}</button>`;
   });
   tabs+=`</div>`;
 
-  let content = "";
-
-  if (phase===0) {
-    // Ideation
-    content += `<div class="panel">`;
-    content += `<div class="panel-title">Submit your idea</div>`;
-    content += `<div class="panel-sub">Your ideas are private until Phase 2 begins — only you can see them.</div>`;
-    content += `<div class="notice">Take your time. Ideas will be shared with the full team when Phase 2 opens.</div>`;
-    content += `<div class="form-group"><label>Idea title</label><input type="text" id="d-title" placeholder="Give it a punchy name..."></div>`;
-    content += `<div class="form-row">`;
-    content += `<div class="form-group"><label>Category</label><select id="d-cat"><option value="">Select...</option>${CATEGORIES.map(c=>`<option>${c}</option>`).join("")}</select></div>`;
-    content += `<div class="form-group"><label>Estimated impact</label><select id="d-impact"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div>`;
-    content += `<div class="form-group"><label>Estimated effort</label><select id="d-effort"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div>`;
-    content += `</div>`;
-    content += `<div class="form-group"><label>Description & rationale</label><textarea id="d-desc" placeholder="What's the idea? Why does it matter? What would success look like?"></textarea></div>`;
-    content += `<div class="btn-row"><button class="btn btn-primary" onclick="submitForm(true)">Submit for Phase 2 →</button><button class="btn" onclick="submitForm(false)">Save as draft</button></div>`;
-    content += `</div>`;
-
-    if (myDrafts.length>0) {
-      content += `<div class="panel"><div class="panel-title">Your drafts</div><div class="panel-sub">Only visible to you. Submit when you're ready.</div>`;
-      myDrafts.forEach(i=>{content+=ideaCard(i,"p0");});
-      content += `</div>`;
-    }
-    if (mySubmitted.length>0) {
-      content += `<div class="panel"><div class="panel-title">Your submitted ideas</div><div class="panel-sub">Locked in for Phase 2 — looking good!</div>`;
-      mySubmitted.forEach(i=>{content+=ideaCard(i,"p0");});
-      content += `</div>`;
-    }
-    if (myIdeas.length===0) content+=`<div class="empty">No ideas yet — fill in the form above to get started!</div>`;
-
-    if (isAdmin()) {
-      content += `<div class="panel panel-admin"><div class="panel-title">Admin controls</div>`;
-      content += `<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">${submitted.length} of ${ideas.length} idea${ideas.length!==1?"s":""} submitted so far.</div>`;
-      content += `<button class="btn btn-primary" onclick="advancePhase()">Close ideation & open Phase 2 →</button></div>`;
-    }
+  let content="";
+  if(phase===0){
+    content+=`<div class="panel"><div class="panel-title">Submit your idea</div><div class="panel-sub">Your ideas are private until Phase 2 begins — only you can see them.</div><div class="notice">Take your time. Ideas will be shared with the full team when Phase 2 opens.</div>`;
+    content+=`<div class="form-group"><label>Idea title</label><input type="text" id="d-title" placeholder="Give it a punchy name..."></div>`;
+    content+=`<div class="form-row"><div class="form-group"><label>Category</label><select id="d-cat"><option value="">Select...</option>${CATEGORIES.map(c=>`<option>${c}</option>`).join("")}</select></div><div class="form-group"><label>Estimated impact</label><select id="d-impact"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div><div class="form-group"><label>Estimated effort</label><select id="d-effort"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div></div>`;
+    content+=`<div class="form-group"><label>Description & rationale</label><textarea id="d-desc" placeholder="What's the idea? Why does it matter? What would success look like?"></textarea></div>`;
+    content+=`<div class="btn-row"><button class="btn btn-primary" onclick="submitForm(true)">Submit for Phase 2 →</button><button class="btn" onclick="submitForm(false)">Save as draft</button></div></div>`;
+    if(myDrafts.length>0){content+=`<div class="panel"><div class="panel-title">Your drafts</div><div class="panel-sub">Only visible to you. Submit when you're ready.</div>`;myDrafts.forEach(i=>{content+=ideaCard(i,"p0");});content+=`</div>`;}
+    if(mySubmitted.length>0){content+=`<div class="panel"><div class="panel-title">Your submitted ideas</div><div class="panel-sub">Locked in for Phase 2 — looking good!</div>`;mySubmitted.forEach(i=>{content+=ideaCard(i,"p0");});content+=`</div>`;}
+    if(myIdeas.length===0) content+=`<div class="empty">No ideas yet — fill in the form above to get started!</div>`;
+    if(isAdmin()) content+=`<div class="panel panel-admin"><div class="panel-title">Admin controls</div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">${submitted.length} of ${ideas.length} idea${ideas.length!==1?"s":""} submitted so far.</div><button class="btn btn-primary" onclick="advancePhase()">Close ideation & open Phase 2 →</button></div>`;
   }
-
-  else if (phase===1) {
-    // Refinement
-    content += `<div class="notice">All submitted ideas are now visible. Authors are anonymous — focus on the ideas! Flag anything that looks like a duplicate.</div>`;
-    if (isAdmin()&&flaggedCount>0) content+=`<div class="notice notice-amber">${flaggedCount} idea${flaggedCount!==1?" have":" has"} been flagged as potentially similar. Use the merge tool below to consolidate before voting opens.</div>`;
-
-    if (isAdmin()) {
-      const selCount = Object.values(mergeSelections).filter(Boolean).length;
-      content += `<div class="panel panel-admin"><div class="panel-title">Admin controls</div>`;
-      content += `<div class="btn-row"><button class="btn btn-amber" onclick="toggleMerge()">${showMergePanel?"Cancel merge":"Merge similar ideas"}</button>`;
-      content += `<button class="btn btn-primary" onclick="advancePhase()">Lock ideas & open Phase 3 voting →</button></div>`;
-      if (showMergePanel) {
-        content += `<div class="merge-list"><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Select 2 or more ideas to merge. The first selected idea's title and description are kept. All comments are combined and all authors credited.</div>`;
-        submitted.forEach(i=>{
-          const f=flagsForIdea(i.id).length;
-          content+=`<div class="merge-item"><input type="checkbox" ${mergeSelections[i.id]?"checked":""} onchange="toggleMergeItem('${i.id}')"><div><div class="merge-item-title">${esc(i.title)}</div><div class="merge-item-meta">${esc(i.category)}${f>0?` · ${f} flag${f!==1?"s":""}`:""}</div></div></div>`;
-        });
-        if (selCount>=2) content+=`<div style="margin-top:10px;"><button class="btn btn-amber" onclick="doMerge()">Merge ${selCount} ideas →</button></div>`;
-        content += `</div>`;
-      }
-      content += `</div>`;
-    }
-
-    if (submitted.length===0) content+=`<div class="empty">No ideas submitted yet.</div>`;
-    else submitted.forEach(i=>{content+=ideaCard(i,"p1");});
-
-    if (myUnsubmitted.length>0) {
-      content+=`<div class="panel"><div class="panel-title" style="color:var(--text-secondary);">Your unsubmitted drafts</div><div class="panel-sub">Still only visible to you — submit to add to the board.</div>`;
-      myUnsubmitted.forEach(i=>{content+=ideaCard(i,"p1draft");});
+  else if(phase===1){
+    content+=`<div class="notice">All submitted ideas are now visible. Authors are anonymous — focus on the ideas! Flag anything that looks like a duplicate.</div>`;
+    if(isAdmin()&&flaggedCount>0) content+=`<div class="notice notice-amber">${flaggedCount} idea${flaggedCount!==1?" have":" has"} been flagged as potentially similar. Use the merge tool to consolidate before voting opens.</div>`;
+    if(isAdmin()){
+      const selCount=Object.values(mergeSelections).filter(Boolean).length;
+      content+=`<div class="panel panel-admin"><div class="panel-title">Admin controls</div><div class="btn-row"><button class="btn btn-amber" onclick="toggleMerge()">${showMergePanel?"Cancel merge":"Merge similar ideas"}</button><button class="btn btn-primary" onclick="advancePhase()">Lock ideas & open Phase 3 voting →</button></div>`;
+      if(showMergePanel){content+=`<div class="merge-list"><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Select 2 or more ideas to merge. The first selected idea's title and description are kept. All comments are combined and all authors credited.</div>`;submitted.forEach(i=>{const f=flagsForIdea(i.id).length;content+=`<div class="merge-item"><input type="checkbox" ${mergeSelections[i.id]?"checked":""} onchange="toggleMergeItem('${i.id}')"><div><div class="merge-item-title">${esc(i.title)}</div><div class="merge-item-meta">${esc(i.category)}${f>0?` · ${f} flag${f!==1?"s":""}`:""}</div></div></div>`;});if(selCount>=2) content+=`<div style="margin-top:10px;"><button class="btn btn-amber" onclick="doMerge()">Merge ${selCount} ideas →</button></div>`;content+=`</div>`;}
       content+=`</div>`;
     }
+    if(submitted.length===0) content+=`<div class="empty">No ideas submitted yet.</div>`;
+    else submitted.forEach(i=>{content+=ideaCard(i,"p1");});
+    if(myUnsubmitted.length>0){content+=`<div class="panel"><div class="panel-title" style="color:var(--text-secondary);">Your unsubmitted drafts</div><div class="panel-sub">Still only visible to you — submit to add to the board.</div>`;myUnsubmitted.forEach(i=>{content+=ideaCard(i,"p1draft");});content+=`</div>`;}
   }
-
-  else if (phase===2) {
-    // Voting
-    const sorted = [...submitted].sort((a,b)=>votesForIdea(b.id)-votesForIdea(a.id));
-    content += `<div class="notice">Authors are anonymous — vote for the ideas you believe in most!</div>`;
-    content += `<div class="votes-bar"><span style="font-size:14px;">Your votes: <strong style="color:#534AB7;">${myVotesRemaining()} remaining</strong> of ${VOTES_PER_PERSON}</span>`;
-    content += `<div class="vote-dots">`;
-    for(let i=0;i<VOTES_PER_PERSON;i++) { const f=i<usedVotes; content+=`<div class="vote-dot" style="background:${f?"#534AB7":"var(--bg-secondary)"};border:0.5px solid ${f?"#534AB7":"var(--border-md)"};"></div>`; }
-    content += `</div></div>`;
-    if (sorted.length===0) content+=`<div class="empty">No ideas to vote on yet.</div>`;
+  else if(phase===2){
+    const sorted=[...submitted].sort((a,b)=>votesForIdea(b.id)-votesForIdea(a.id));
+    content+=`<div class="notice">Authors are anonymous — vote for the ideas you believe in most!</div>`;
+    content+=`<div class="votes-bar"><span style="font-size:14px;">Your votes: <strong style="color:#534AB7;">${myVotesRemaining()} remaining</strong> of ${VOTES_PER_PERSON}</span><div class="vote-dots">`;
+    for(let i=0;i<VOTES_PER_PERSON;i++){const f=i<usedVotes;content+=`<div class="vote-dot" style="background:${f?"#534AB7":"var(--bg-secondary)"};border:0.5px solid ${f?"#534AB7":"var(--border-md)"};"></div>`;}
+    content+=`</div></div>`;
+    if(sorted.length===0) content+=`<div class="empty">No ideas to vote on yet.</div>`;
     else sorted.forEach(i=>{content+=ideaCard(i,"p2");});
-
-    if (isAdmin()) {
-      const voters = [...new Set(votes.map(v=>v.author))].length;
-      content += `<div class="panel panel-admin" style="margin-top:1rem;"><div class="panel-title">Admin controls</div>`;
-      content += `<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">${voters} team member${voters!==1?"s have":" has"} voted so far.</div>`;
-      content += `<button class="btn btn-teal" onclick="closeVoting()">Close voting & publish results →</button></div>`;
-    }
+    if(isAdmin()){const voters=[...new Set(votes.map(v=>v.author))].length;content+=`<div class="panel panel-admin" style="margin-top:1rem;"><div class="panel-title">Admin controls</div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">${voters} team member${voters!==1?"s have":" has"} voted so far.</div><button class="btn btn-teal" onclick="closeVoting()">Close voting & publish results →</button></div>`;}
   }
-
-  else {
-    // Results
-    const sorted = [...submitted].sort((a,b)=>votesForIdea(b.id)-votesForIdea(a.id));
-    const totalCast = votes.reduce((s,v)=>s+v.count,0);
-    const topScore = sorted.length>0?votesForIdea(sorted[0].id):0;
-    const voters = [...new Set(votes.map(v=>v.author))].length;
-
-    if (topScore>0) {
-      const winCount = sorted.filter(i=>votesForIdea(i.id)===topScore).length;
-      content+=`<div class="notice notice-teal">🎉 <strong>Voting is closed.</strong> Congratulations to the top idea${winCount>1?"s":""}! Authors are now revealed — these results will inform our 2026 team goals.</div>`;
-    }
+  else{
+    const sorted=[...submitted].sort((a,b)=>votesForIdea(b.id)-votesForIdea(a.id));
+    const totalCast=votes.reduce((s,v)=>s+v.count,0), topScore=sorted.length>0?votesForIdea(sorted[0].id):0;
+    const voters=[...new Set(votes.map(v=>v.author))].length;
+    if(topScore>0){const wc=sorted.filter(i=>votesForIdea(i.id)===topScore).length;content+=`<div class="notice notice-teal">🎉 <strong>Voting is closed.</strong> Congratulations to the top idea${wc>1?"s":""}! Authors are now revealed — these results will inform our 2026 team goals.</div>`;}
     content+=`<div class="stats-grid"><div class="stat-card"><div class="stat-label">Ideas submitted</div><div class="stat-value">${submitted.length}</div></div><div class="stat-card"><div class="stat-label">Total votes cast</div><div class="stat-value">${totalCast}</div></div><div class="stat-card"><div class="stat-label">Members who voted</div><div class="stat-value">${voters}</div></div></div>`;
-
-    if (sorted.length===0) { content+=`<div class="empty">No ideas were submitted.</div>`; }
-    else {
-      const rankLabels=["1st","2nd","3rd"]; const rankCls=["rank-gold","rank-silver","rank-bronze"];
-      let lastScore=-1, dispRank=0;
+    if(sorted.length===0){content+=`<div class="empty">No ideas were submitted.</div>`;}
+    else{
+      const rl=["1st","2nd","3rd"],rc=["rank-gold","rank-silver","rank-bronze"];
+      let lastScore=-1,dispRank=0;
       sorted.forEach((idea,idx)=>{
-        const v=votesForIdea(idea.id);
-        if(v!==lastScore){dispRank=idx+1;lastScore=v;}
-        const isWin=v===topScore&&topScore>0;
-        const rLabel=dispRank<=3?rankLabels[dispRank-1]:`${dispRank}th`;
-        const rCls=dispRank<=3?rankCls[dispRank-1]:"";
-        const pct=Math.round(v/maxVotes()*100);
-        content+=`<div class="result-card ${isWin?"winner":""}"><div class="result-rank ${rCls}">${rLabel}</div><div class="result-body">`;
-        content+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:4px;"><div class="result-title">${esc(idea.title)}</div><div class="badge-row">`;
-        if(isWin) content+=`<span class="badge badge-teal">Top idea</span>`;
-        if(idea.merged) content+=`<span class="badge badge-orange">Merged</span>`;
-        content+=`</div></div><div class="result-meta">${avatarEl(idea.author)} ${esc(idea.author)}`;
-        if(idea.merged&&idea.merged_authors?.length) content+=` <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>`;
-        content+=` &middot; ${esc(idea.category||"Uncategorized")}`;
-        if(idea.impact) content+=` &middot; Impact: ${esc(idea.impact)}`;
-        content+=`</div><div class="bar-row"><div class="bar-bg"><div class="bar-fill ${isWin?"bar-fill-teal":"bar-fill-purple"}" style="width:${pct}%"></div></div><div class="bar-votes">${v} vote${v!==1?"s":""}</div></div></div></div>`;
+        const v=votesForIdea(idea.id);if(v!==lastScore){dispRank=idx+1;lastScore=v;}
+        const isWin=v===topScore&&topScore>0,pct=Math.round(v/maxVotes()*100);
+        content+=`<div class="result-card ${isWin?"winner":""}"><div class="result-rank ${dispRank<=3?rc[dispRank-1]:""}">${dispRank<=3?rl[dispRank-1]:`${dispRank}th`}</div><div class="result-body">`;
+        content+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:4px;"><div class="result-title">${esc(idea.title)}</div><div class="badge-row">${isWin?`<span class="badge badge-teal">Top idea</span>`:""}${idea.merged?`<span class="badge badge-orange">Merged</span>`:""}</div></div>`;
+        content+=`<div class="result-meta">${avatarEl(idea.author)} ${esc(idea.author)}${idea.merged&&idea.merged_authors?.length?` <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>`:""} &middot; ${esc(idea.category||"Uncategorized")}${idea.impact?` &middot; Impact: ${esc(idea.impact)}`:""}</div>`;
+        content+=`<div class="bar-row"><div class="bar-bg"><div class="bar-fill ${isWin?"bar-fill-teal":"bar-fill-purple"}" style="width:${pct}%"></div></div><div class="bar-votes">${v} vote${v!==1?"s":""}</div></div></div></div>`;
       });
     }
     if(isAdmin()) content+=`<div class="panel panel-admin" style="margin-top:1rem;"><div class="panel-title">Admin controls</div><div style="font-size:13px;color:var(--text-secondary);">Need to re-open a prior phase? Use the phase tabs above.</div></div>`;
   }
 
-  const userBadge = isAdmin() ? `<span class="badge badge-purple">admin</span>` : `<span class="badge badge-gray">team member</span>`;
-
-  document.getElementById("root").innerHTML = `
+  document.getElementById("root").innerHTML=`
     <div class="app">
       <div class="header"><h1>LPI 2026 goals</h1><p>Ideate, refine, and vote on our team's initiatives for the year ahead.</p></div>
       <div class="user-row">
-        <label>You are:</label>
-        <select onchange="switchUser(this.value)">${TEAM.map(n=>`<option value="${n}" ${n===currentUser?"selected":""}>${n}</option>`).join("")}</select>
-        ${userBadge}
+        <span style="font-size:13px;color:var(--text-secondary);">Signed in as <strong>${esc(currentUser)}</strong></span>
+        ${isAdmin()?`<span class="badge badge-purple">admin</span>`:`<span class="badge badge-gray">team member</span>`}
+        <button class="signout-btn" onclick="doSignOut()">Sign out</button>
       </div>
-      ${tabs}
-      ${content}
+      ${tabs}${content}
     </div>`;
 }
 
-window.switchUser = (name) => { currentUser=name; editingId=null; render(); };
-
-window.submitForm = (submitted) => {
-  const title = document.getElementById("d-title")?.value||"";
-  const category = document.getElementById("d-cat")?.value||"";
-  const description = document.getElementById("d-desc")?.value||"";
-  const impact = document.getElementById("d-impact")?.value||"";
-  const effort = document.getElementById("d-effort")?.value||"";
-  if (submitted && (!title.trim()||!category||!description.trim())) { alert("Please fill in the title, category, and description."); return; }
-  if (!submitted && !title.trim()) { alert("Give your idea a title first."); return; }
-  submitIdea({title,category,description,impact,effort}, submitted);
-};
-
-function renderLogin() {
-  document.getElementById("root").innerHTML = `
-    <div class="login-screen">
-      <div class="login-card">
-        <h2>LPI 2026 goals</h2>
-        <p>Select your name to get started.</p>
-        <select id="login-select"><option value="">Choose your name...</option>${TEAM.map(n=>`<option>${n}</option>`).join("")}</select>
-        <button class="btn btn-primary btn-full" onclick="doLogin()">Let's go →</button>
-      </div>
-    </div>`;
-}
-
-window.doLogin = () => {
-  const sel = document.getElementById("login-select")?.value;
-  if (!sel) { alert("Please select your name."); return; }
-  currentUser = sel;
-  loadAll();
-};
-
-renderLogin();
+// ── Boot ─────────────────────────────────────────────────────────────────────
+window.renderLoginScreen = renderLoginScreen;
+initAuth();
 </script>
 </body>
 </html>
