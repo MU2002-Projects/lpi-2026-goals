@@ -234,7 +234,7 @@ function displayAuthor(idea,mode){
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 async function initAuth(){
-  // Listen for auth state changes — this catches magic link redirects
+  // Listen for auth state changes
   supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if(session?.user?.email){
       const name = EMAIL_TO_NAME[session.user.email.toLowerCase()];
@@ -259,12 +259,21 @@ async function initAuth(){
   }
 }
 
-async function sendMagicLink(email){
+async function sendOtpCode(email){
   const normalized=email.trim().toLowerCase();
   if(!EMAIL_TO_NAME[normalized]){ renderLoginScreen("That email address isn't on the team roster. Please check with Andy and try again."); return; }
-  const {error} = await supabaseClient.auth.signInWithOtp({ email:normalized, options:{emailRedirectTo:window.location.origin+window.location.pathname} });
+  const {error} = await supabaseClient.auth.signInWithOtp({ email:normalized, options:{ shouldCreateUser:true } });
   if(error) renderLoginScreen("Something went wrong: "+error.message);
-  else renderCheckEmail(normalized);
+  else renderEnterCode(normalized);
+}
+
+async function verifyOtpCode(email, token){
+  if(!token||token.trim().length!==6){ renderEnterCode(email,"Please enter the full 6-digit code."); return; }
+  const {error} = await supabaseClient.auth.verifyOtp({ email, token:token.trim(), type:"email" });
+  if(error){ renderEnterCode(email,"That code didn't work — please check and try again, or request a new one."); return; }
+  const name=EMAIL_TO_NAME[email.toLowerCase()];
+  if(name){ userEmail=email; currentUser=name; await loadAll(); }
+  else renderUnauthorized(email);
 }
 
 async function signOut(){
@@ -353,7 +362,9 @@ window.adminGoPhase=(p)=>{if(!isAdmin())return;if(p===3&&phase<3)return;setPhase
 window.advancePhase=()=>setPhase(phase+1);
 window.closeVoting=()=>setPhase(3);
 window.doSignOut=()=>signOut();
-window.doSendLink=()=>{const email=document.getElementById("login-email")?.value||"";if(!email.trim()){alert("Please enter your email address.");return;}sendMagicLink(email.trim());};
+window.doSendLink=()=>{const email=document.getElementById("login-email")?.value||"";if(!email.trim()){alert("Please enter your email address.");return;}sendOtpCode(email.trim());};
+window.doVerifyCode=()=>{const email=document.getElementById("otp-email")?.value||"";const token=document.getElementById("otp-code")?.value||"";verifyOtpCode(email,token);};
+window.doResendCode=(email)=>sendOtpCode(email);
 window.submitForm=(submitted)=>{
   const title=document.getElementById("d-title")?.value||"";
   const category=document.getElementById("d-cat")?.value||"";
@@ -370,20 +381,25 @@ function renderLoginScreen(errorMsg=""){
   document.getElementById("root").innerHTML=`
     <div class="auth-screen"><div class="auth-card">
       <h2>LPI 2026 goals</h2>
-      <p class="subtitle">Enter your Accordion email and we'll send you a magic link to sign in — no password needed.</p>
+      <p class="subtitle">Enter your Accordion email and we'll send you a 6-digit code to sign in.</p>
       ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
       <div class="form-group"><input type="email" id="login-email" placeholder="your.name@accordion.com" style="width:100%;" onkeydown="if(event.key==='Enter')doSendLink()"></div>
-      <button class="btn btn-primary btn-full" onclick="doSendLink()">Send magic link →</button>
+      <button class="btn btn-primary btn-full" onclick="doSendLink()">Send code →</button>
     </div></div>`;
   setTimeout(()=>document.getElementById("login-email")?.focus(),100);
 }
-function renderCheckEmail(email){
+function renderEnterCode(email, errorMsg=""){
   document.getElementById("root").innerHTML=`
     <div class="auth-screen"><div class="auth-card">
-      <h2>Check your email</h2>
-      <div class="success-msg">We sent a magic link to <strong>${esc(email)}</strong>.<br>Click the link to sign in — it expires in 1 hour.</div>
-      <p class="subtitle">Didn't get it? Check your spam folder, or <button class="signout-btn" onclick="renderLoginScreen()">try again</button>.</p>
+      <h2>Enter your code</h2>
+      <div class="success-msg">We sent a 6-digit code to <strong>${esc(email)}</strong>. Enter it below to sign in.</div>
+      ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
+      <input type="hidden" id="otp-email" value="${esc(email)}">
+      <div class="form-group"><input type="text" id="otp-code" placeholder="123456" maxlength="6" style="width:100%;font-size:24px;letter-spacing:6px;text-align:center;" onkeydown="if(event.key==='Enter')doVerifyCode()"></div>
+      <button class="btn btn-primary btn-full" onclick="doVerifyCode()">Sign in →</button>
+      <p class="subtitle" style="margin-top:1rem;">Didn't get it? <button class="signout-btn" onclick="doResendCode('${esc(email)}')">Send a new code</button> or <button class="signout-btn" onclick="renderLoginScreen()">use a different email</button>.</p>
     </div></div>`;
+  setTimeout(()=>document.getElementById("otp-code")?.focus(),100);
 }
 function renderUnauthorized(email){
   document.getElementById("root").innerHTML=`
