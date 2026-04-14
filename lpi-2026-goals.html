@@ -524,7 +524,7 @@ function render(){
     if(myUnsubmitted.length>0){content+=`<div class="panel"><div class="panel-title" style="color:var(--text-secondary);">Your unsubmitted drafts</div><div class="panel-sub">Still only visible to you — submit to add to the board.</div>`;myUnsubmitted.forEach(i=>{content+=ideaCard(i,"p1draft");});content+=`</div>`;}
   }
   else if(phase===2){
-    const sorted=[...submitted].sort((a,b)=>votesForIdea(b.id)-votesForIdea(a.id));
+    const sorted=[...submitted];
     content+=`<div class="notice">Authors are anonymous — vote for the ideas you believe in most!</div>`;
     content+=`<div class="votes-bar"><span style="font-size:14px;">Your votes: <strong style="color:#534AB7;">${myVotesRemaining()} remaining</strong> of ${VOTES_PER_PERSON}</span><div class="vote-dots">`;
     for(let i=0;i<VOTES_PER_PERSON;i++){const f=i<usedVotes;content+=`<div class="vote-dot" style="background:${f?"#534AB7":"var(--bg-secondary)"};border:0.5px solid ${f?"#534AB7":"var(--border-md)"};"></div>`;}
