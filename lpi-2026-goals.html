@@ -452,7 +452,8 @@ function ideaCard(idea,mode){
     h+=`<div class="vote-section"><button class="btn btn-sm" onclick="vote('${idea.id}',-1)" ${myV===0?"disabled":""}>−</button>`;
     h+=`<div style="text-align:center;"><div class="vote-count">${myV}</div><div class="vote-label">your votes</div></div>`;
     h+=`<button class="btn btn-sm btn-primary" onclick="vote('${idea.id}',1)" ${myVotesRemaining()===0&&myV===0?"disabled":""}>+</button>`;
-    h+=`<div style="flex:1;"><div class="bar-bg"><div class="bar-fill bar-fill-purple" style="width:${Math.round(totalV/maxV*100)}%"></div></div><div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">${totalV} total vote${totalV!==1?"s":""}</div></div></div>`;
+    const myMaxV=Math.max(1,VOTES_PER_PERSON);
+    h+=`<div style="flex:1;"><div class="bar-bg"><div class="bar-fill bar-fill-purple" style="width:${Math.round(myV/myMaxV*100)}%"></div></div><div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">${myV} of your vote${myV!==1?"s":""}</div></div></div>`;
   }
   if(mode==="p0"){
     h+=`<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button>`;
