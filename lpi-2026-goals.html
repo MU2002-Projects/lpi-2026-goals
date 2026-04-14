@@ -481,7 +481,7 @@ function ideaCard(idea,mode){
     h+=`</div>`;
   }
   if(mode==="p1"){
-    if(ismine) h+=`<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button></div>`;
+    if(ismine||isAdmin()) h+=`<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button></div>`;
     h+=`<div class="qa-section"><div class="qa-title">Q&A & comments (${ideaComments.length})</div>`;
     ideaComments.forEach(c=>{const isMine=c.author===currentUser;const cAv=isMine?avatarEl(c.author):anonEl();const cName=isMine?`${esc(c.author)} <em style="opacity:0.6;">(you)</em>`:`<em>Anonymous</em>`;h+=`<div class="comment">${cAv}<div class="comment-body"><div class="comment-who">${cName}</div><div class="comment-text">${esc(c.text)}</div></div></div>`;});
     h+=`<div class="comment-input-row">${avatarEl(currentUser)}<textarea id="cmt-${idea.id}" placeholder="Ask a question or leave a comment..." onchange="commentDrafts['${idea.id}']=this.value">${esc(commentDrafts[idea.id]||"")}</textarea><button class="btn btn-sm btn-primary" onclick="submitComment('${idea.id}')">Post</button></div></div>`;
