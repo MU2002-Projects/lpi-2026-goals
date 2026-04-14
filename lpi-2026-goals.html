@@ -555,14 +555,14 @@ function render(){
   const usedVotes=myVotesUsed();
 
   let tabs=`<div class="phase-bar">`;
-  [{label:"Phase 1 — Ideation",dot:"dot-green"},{label:"Phase 2 — Refinement",dot:"dot-amber"},{label:"Phase 3 — Voting",dot:"dot-purple"},{label:"Results",dot:"dot-teal"}].forEach((t,i)=>{
+  [{label:"Phase 1 — Ideation",dot:"dot-green",dates:"Apr 14 – Apr 27"},{label:"Phase 2 — Refinement",dot:"dot-amber",dates:"Apr 28 – May 4"},{label:"Phase 3 — Voting",dot:"dot-purple",dates:"May 5 – May 10"},{label:"Results",dot:"dot-teal",dates:"May 11"}].forEach((t,i)=>{
     const isCur=i===phase,isUnlocked=i<=phase,isResultsLocked=i===3&&phase<3;
     let cls="phase-tab";
     if(isCur) cls+=" active";
     if(!isUnlocked||isResultsLocked) cls+=" locked";
     if(isAdmin()&&!isCur&&isUnlocked&&!isResultsLocked) cls+=" admin-nav";
     const title=isAdmin()&&!isCur&&isUnlocked&&!isResultsLocked?"title='Click to re-open this phase'":"";
-    tabs+=`<button class="${cls}" onclick="adminGoPhase(${i})" ${title}><span class="phase-dot ${t.dot}"></span>${t.label}</button>`;
+    tabs+=`<button class="${cls}" onclick="adminGoPhase(${i})" ${title}><span class="phase-dot ${t.dot}"></span>${t.label}<span style="display:block;font-size:10px;opacity:0.7;margin-top:2px;font-weight:400;">${t.dates}</span></button>`;
   });
   tabs+=`</div>`;
 
