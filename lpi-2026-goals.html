@@ -579,6 +579,7 @@ function render(){
         const resultAvatars=allResultAuthors.map((a,i)=>`<div style="${i>0?"margin-left:-8px;":""}">${avatarEl(a)}</div>`).join("");
         const resultNames=allResultAuthors.map(esc).join(" & ");
         content+=`<div class="result-meta"><div style="display:flex;align-items:center;">${resultAvatars}</div> ${resultNames}${idea.merged?` <span class="badge badge-orange" style="margin-left:4px;">Merged</span>`:""} &middot; ${esc(idea.category||"Uncategorized")}${idea.impact?` &middot; Impact: ${esc(idea.impact)}`:""}</div>`;
+        if(idea.description) content+=`<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:8px 0;">${esc(idea.description)}</div>`;
         content+=`<div class="bar-row"><div class="bar-bg"><div class="bar-fill ${isWin?"bar-fill-teal":"bar-fill-purple"}" style="width:${pct}%"></div></div><div class="bar-votes">${v} vote${v!==1?"s":""}</div></div></div></div>`;
       });
     }
