@@ -322,7 +322,8 @@ async function loadAll(){
 // ── Actions ──────────────────────────────────────────────────────────────────
 async function setPhase(p){ if(!isAdmin()) return; await db.setState(p); phase=p; showMergePanel=false; mergeSelections={}; render(); }
 async function submitIdea(draft,submitted){
-  const res=await db.addIdea({author:currentUser,title:draft.title.trim(),category:draft.category,description:draft.description.trim(),impact:draft.impact||null,effort:draft.effort||null,submitted,merged:false,merged_authors:[],phase_created:0});
+  const ideaCount = ideas.length + 1;
+  const res=await db.addIdea({author:currentUser,title:draft.title.trim(),category:draft.category,description:draft.description.trim(),impact:draft.impact||null,effort:draft.effort||null,submitted,merged:false,merged_authors:[],phase_created:0,idea_number:ideaCount});
   ideas.push(res[0]); render();
 }
 async function finalizeIdea(id){ await db.updateIdea(id,{submitted:true}); const i=ideas.find(i=>i.id===id); if(i) i.submitted=true; render(); }
@@ -457,7 +458,8 @@ function ideaCard(idea,mode){
     h+=`<div class="btn-row"><button class="btn btn-primary btn-sm" onclick="commitEdit('${idea.id}')">Save changes</button><button class="btn btn-sm" onclick="cancelEdit()">Cancel</button></div>`;
     h+=`</div>`;return h;
   }
-  h+=`<div class="idea-header"><div><div class="idea-title">${esc(idea.title)}</div>`;
+  const ideaNum = idea.idea_number ? `<span style="font-size:11px;font-weight:400;color:var(--text-secondary);background:var(--bg-secondary);border:0.5px solid var(--border-md);border-radius:4px;padding:2px 7px;margin-right:6px;">Idea #${idea.idea_number}</span>` : "";
+  h+=`<div class="idea-header"><div><div class="idea-title">${ideaNum}${esc(idea.title)}</div>`;
   h+=`<div class="idea-meta">${av} ${name}`;
   if(idea.merged&&idea.merged_authors?.length){const sn=mode!=="p1"&&mode!=="p2";h+=sn?` &middot; <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>`:` &middot; <em style="font-size:11px;">merged idea</em>`;}
   h+=` &middot; ${esc(idea.category||"Uncategorized")}</div></div>`;
@@ -492,7 +494,7 @@ function ideaCard(idea,mode){
     h+=`<div class="flag-section">`;
     if(ideaFlags.length>0){h+=`<div class="flag-notice">`;ideaFlags.forEach(f=>{h+=`<div style="margin-bottom:3px;">${f.author===currentUser?"You flagged":"Someone flagged"} as similar to: <em>${esc(f.note)}</em></div>`;});h+=`</div>`;}
     if(myFlag){h+=`<button class="btn btn-sm" onclick="removeflag('${idea.id}')">Remove my flag</button>`;}
-    else{h+=`<div class="flag-input-row"><input type="text" id="flag-${idea.id}" placeholder='Similar to: "Idea title..."' value="${esc(flagDrafts[idea.id]||"")}" onchange="flagDrafts['${idea.id}']=this.value"><button class="btn btn-sm btn-amber" onclick="submitFlag('${idea.id}')">Flag as similar</button></div>`;}
+    else{h+=`<div class="flag-input-row"><input type="text" id="flag-${idea.id}" placeholder='Similar to: Idea #...' value="${esc(flagDrafts[idea.id]||"")}" onchange="flagDrafts['${idea.id}']=this.value"><button class="btn btn-sm btn-amber" onclick="submitFlag('${idea.id}')">Flag as similar</button></div>`;}
     h+=`</div>`;
   }
   if(mode==="p1draft"){h+=`<div class="btn-row"><button class="btn btn-sm" onclick="startEdit('${idea.id}')">Edit</button><button class="btn btn-sm btn-primary" onclick="finalize('${idea.id}')">Submit for Phase 2 →</button><button class="btn btn-sm btn-danger" onclick="del('${idea.id}')">Delete</button></div>`;}
