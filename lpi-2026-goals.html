@@ -226,8 +226,27 @@ function avatarEl(name,size=26){
 function anonEl(size=26){ return `<div class="anon-avatar" style="width:${size}px;height:${size}px;">?</div>`; }
 function displayAuthor(idea,mode){
   const mine=idea.author===currentUser;
-  const anon=mode==="p1"||mode==="p2"||mode==="results";
-  if(anon&&!mine) return {av:anonEl(),name:`<em>Anonymous</em>`};
+  const anon=mode==="p1"||mode==="p2";
+  const allAuthors=[idea.author,...(idea.merged_authors||[])];
+  const isMerged=idea.merged&&idea.merged_authors?.length>0;
+
+  if(anon&&!mine){
+    if(isMerged){
+      // Show multiple anon avatars for merged ideas
+      const anonAvatars=allAuthors.map(()=>anonEl()).join(`<div style="margin-left:-8px;">`)+`</div>`.repeat(allAuthors.length-1);
+      const avHtml=`<div style="display:flex;align-items:center;">${allAuthors.map((_,i)=>`<div style="${i>0?"margin-left:-8px;":""}">${anonEl()}</div>`).join("")}</div>`;
+      return {av:avHtml, name:`<em>Anonymous (${allAuthors.length})</em>`};
+    }
+    return {av:anonEl(),name:`<em>Anonymous</em>`};
+  }
+
+  if(isMerged){
+    const avHtml=`<div style="display:flex;align-items:center;">${allAuthors.map((a,i)=>`<div style="${i>0?"margin-left:-8px;":""}">${avatarEl(a)}</div>`).join("")}</div>`;
+    const isMineInMerge=allAuthors.includes(currentUser);
+    const names=allAuthors.map(a=>a===currentUser?`${esc(a)} <em style="opacity:0.6;">(you)</em>`:esc(a)).join(" & ");
+    return {av:avHtml, name:names};
+  }
+
   const label=mine&&anon?`${esc(idea.author)} <em style="opacity:0.6;">(you)</em>`:esc(idea.author);
   return {av:avatarEl(idea.author),name:label};
 }
@@ -548,8 +567,11 @@ function render(){
         const v=votesForIdea(idea.id);if(v!==lastScore){dispRank=idx+1;lastScore=v;}
         const isWin=v===topScore&&topScore>0,pct=Math.round(v/maxVotes()*100);
         content+=`<div class="result-card ${isWin?"winner":""}"><div class="result-rank ${dispRank<=3?rc[dispRank-1]:""}">${dispRank<=3?rl[dispRank-1]:`${dispRank}th`}</div><div class="result-body">`;
-        content+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:4px;"><div class="result-title">${esc(idea.title)}</div><div class="badge-row">${isWin?`<span class="badge badge-teal">Top idea</span>`:""}${idea.merged?`<span class="badge badge-orange">Merged</span>`:""}</div></div>`;
-        content+=`<div class="result-meta">${avatarEl(idea.author)} ${esc(idea.author)}${idea.merged&&idea.merged_authors?.length?` <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>`:""} &middot; ${esc(idea.category||"Uncategorized")}${idea.impact?` &middot; Impact: ${esc(idea.impact)}`:""}</div>`;
+        content+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:4px;"><div class="result-title">${esc(idea.title)}</div><div class="badge-row">${isWin?`<span class="badge badge-teal">Top idea</span>`:""}</div></div>`;
+        const allResultAuthors=[idea.author,...(idea.merged_authors||[])];
+        const resultAvatars=allResultAuthors.map((a,i)=>`<div style="${i>0?"margin-left:-8px;":""}">${avatarEl(a)}</div>`).join("");
+        const resultNames=allResultAuthors.map(esc).join(" & ");
+        content+=`<div class="result-meta"><div style="display:flex;align-items:center;">${resultAvatars}</div> ${resultNames}${idea.merged?` <span class="badge badge-orange" style="margin-left:4px;">Merged</span>`:""} &middot; ${esc(idea.category||"Uncategorized")}${idea.impact?` &middot; Impact: ${esc(idea.impact)}`:""}</div>`;
         content+=`<div class="bar-row"><div class="bar-bg"><div class="bar-fill ${isWin?"bar-fill-teal":"bar-fill-purple"}" style="width:${pct}%"></div></div><div class="bar-votes">${v} vote${v!==1?"s":""}</div></div></div></div>`;
       });
     }
