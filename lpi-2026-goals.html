@@ -568,7 +568,8 @@ function render(){
 
   let content="";
   if(phase===0){
-    content+=`<div class="panel"><div class="panel-title">Submit your idea</div><div class="panel-sub">Your ideas are private until Phase 2 begins — only you can see them.</div><div class="notice">Take your time. Ideas will be shared with the full team when Phase 2 opens.</div>`;
+    content+=`<div class="panel"><div class="panel-title">How this works</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Your ideas are private during Phase 1 — only you can see them until Phase 2 begins. Take your time, draft freely, and refine before you submit. Ideas will be shared with the full team when Phase 2 opens.</div></div>`;
+    content+=`<div class="panel"><div class="panel-title">Submit your idea</div><div class="panel-sub">Fill in the details below and submit before Apr 27.</div>`;
     content+=`<div class="form-group"><label>Idea title</label><input type="text" id="d-title" placeholder="Give it a punchy name..."></div>`;
     content+=`<div class="form-row"><div class="form-group"><label>Category</label><select id="d-cat"><option value="">Select...</option>${CATEGORIES.map(c=>`<option>${c}</option>`).join("")}</select></div><div class="form-group"><label>Estimated impact</label><select id="d-impact"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div><div class="form-group"><label>Estimated effort</label><select id="d-effort"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div></div>`;
     content+=`<div class="form-group"><label>Description & rationale</label><textarea id="d-desc" placeholder="What's the idea? Why does it matter? What would success look like?"></textarea></div>`;
