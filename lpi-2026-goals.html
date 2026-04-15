@@ -149,18 +149,19 @@ const ADMIN = "Andy Auffant";
 const VOTES_PER_PERSON = 5;
 const CATEGORIES = ["Operational efficiency","Client delivery","Team development","Business development","Technology & tools"];
 
-// ── Email → display name map ─────────────────────────────────────────────────
-// Add each team member's work email below once confirmed
-const EMAIL_TO_NAME = {
-  "andy.auffant@accordion.com": "Andy Auffant",
-  "anand.banthia@accordion.com": "Anand Banthia",
-  "andrew.caldwell@accordion.com": "Andrew Caldwell",
-  "angela.schunk@accordion.com": "Angela Schunk",
-  "kelsey.abel@accordion.com": "Kelsey Abel",
-  "paige.gardner@accordion.com": "Paige Gardner",
-  "tracy.friend@accordion.com": "Tracy Friend",
-  "andrew.j.auffant@gmail.com": "Kelsey Abel",
+// ── Team member PIN map ───────────────────────────────────────────────────────
+// Format: "Display Name": "PIN"
+// Share each person's PIN with them privately via Teams or text
+const TEAM_PINS = {
+  "Andy Auffant":    "1234",
+  "Anand Banthia":   "1234",
+  "Andrew Caldwell": "1234",
+  "Angela Schunk":   "1234",
+  "Kelsey Abel":     "1234",
+  "Paige Gardner":   "1234",
+  "Tracy Friend":    "1234",
 };
+const TEAM_MEMBERS = Object.keys(TEAM_PINS);
 
 const AVATARS = {
   "Anand Banthia":   { color:"#E1F5EE", text:"#085041", initials:"AB" },
@@ -172,7 +173,7 @@ const AVATARS = {
   "Tracy Friend":    { color:"#FAECE7", text:"#993C1D", initials:"TF" },
 };
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Supabase used only for data, not auth
 
 // ── API helpers ──────────────────────────────────────────────────────────────
 async function api(path, method="GET", body=null) {
@@ -254,59 +255,33 @@ function displayAuthor(idea,mode){
 }
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
-async function initAuth(){
-  // Listen for auth state changes
-  supabaseClient.auth.onAuthStateChange(async (event, session) => {
-    if(session?.user?.email){
-      const name = EMAIL_TO_NAME[session.user.email.toLowerCase()];
-      if(name){
-        userEmail=session.user.email; currentUser=name;
-        await loadAll();
-      } else {
-        renderUnauthorized(session.user.email);
-      }
-    } else if(event === "SIGNED_OUT" || (!session && !appLoading)){
-      currentUser=null; userEmail=null;
-      appLoading=false;
-      renderLoginScreen();
-    }
-  });
-
-  // Also check for an existing session on page load
-  const {data:{session}} = await supabaseClient.auth.getSession();
-  if(!session){
-    appLoading=false;
+function initAuth(){
+  const saved = localStorage.getItem("lpi_user");
+  if(saved && TEAM_PINS[saved]){
+    currentUser = saved;
+    loadAll();
+  } else {
+    appLoading = false;
     renderLoginScreen();
   }
 }
 
-async function sendOtpCode(email){
-  const normalized=email.trim().toLowerCase();
-  if(!EMAIL_TO_NAME[normalized]){ renderLoginScreen("That email address isn't on the team roster. Please check with Andy and try again."); return; }
-  // Use signInWithOtp with shouldCreateUser and no emailRedirectTo to force code-based OTP
-  const {error} = await supabaseClient.auth.signInWithOtp({
-    email: normalized,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: null
-    }
-  });
-  if(error) renderLoginScreen("Something went wrong: "+error.message);
-  else renderEnterCode(normalized);
+function verifyPin(name, pin){
+  if(!name){ renderLoginScreen("Please select your name."); return; }
+  if(!pin.trim()){ renderLoginScreen("Please enter your PIN.", name); return; }
+  if(TEAM_PINS[name] && pin.trim() === TEAM_PINS[name]){
+    currentUser = name;
+    localStorage.setItem("lpi_user", name);
+    showSplash = true; appLoading = false; renderSplash();
+  } else {
+    renderLoginScreen("Incorrect PIN — please try again or contact Andy.", name);
+  }
 }
 
-async function verifyOtpCode(email, token){
-  if(!token||token.trim().length<6||token.trim().length>8){ renderEnterCode(email,"Please enter the full 6-digit code."); return; }
-  const {error} = await supabaseClient.auth.verifyOtp({ email, token:token.trim(), type:"email" });
-  if(error){ renderEnterCode(email,"That code didn't work — please check and try again, or request a new one."); return; }
-  const name=EMAIL_TO_NAME[email.toLowerCase()];
-  if(name){ userEmail=email; currentUser=name; showSplash=true; appLoading=false; renderSplash(); }
-  else renderUnauthorized(email);
-}
-
-async function signOut(){
-  await supabaseClient.auth.signOut();
-  currentUser=null; userEmail=null; ideas=[]; comments=[]; flags=[]; votes=[];
+function signOut(){
+  currentUser=null; userEmail=null;
+  localStorage.removeItem("lpi_user");
+  ideas=[]; comments=[]; flags=[]; votes=[];
   renderLoginScreen();
 }
 
@@ -392,9 +367,7 @@ window.advancePhase=()=>setPhase(phase+1);
 window.closeVoting=()=>setPhase(3);
 window.doSignOut=()=>signOut();
 window.dismissSplash=()=>{ showSplash=false; loadAll(); };
-window.doSendLink=()=>{const email=document.getElementById("login-email")?.value||"";if(!email.trim()){alert("Please enter your email address.");return;}sendOtpCode(email.trim());};
-window.doVerifyCode=()=>{const email=document.getElementById("otp-email")?.value||"";const token=document.getElementById("otp-code")?.value||"";verifyOtpCode(email,token);};
-window.doResendCode=(email)=>sendOtpCode(email);
+window.doVerifyPin=()=>{const name=document.getElementById("login-name")?.value||"";const pin=document.getElementById("login-pin")?.value||"";verifyPin(name,pin);};
 window.submitForm=(submitted)=>{
   const title=document.getElementById("d-title")?.value||"";
   const category=document.getElementById("d-cat")?.value||"";
@@ -449,38 +422,28 @@ function renderSplash(){
     </div>`;
 }
 
-function renderLoginScreen(errorMsg=""){
+function renderLoginScreen(errorMsg="", selectedName=""){
   document.getElementById("root").innerHTML=`
     <div class="auth-screen"><div class="auth-card">
       <h2>LPI 2026 goals</h2>
-      <p class="subtitle">Enter your Accordion email and we'll send you a 6-digit code to sign in.</p>
+      <p class="subtitle">Select your name and enter your PIN to sign in.</p>
       ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
-      <div class="form-group"><input type="email" id="login-email" placeholder="your.name@accordion.com" style="width:100%;" onkeydown="if(event.key==='Enter')doSendLink()"></div>
-      <button class="btn btn-primary btn-full" onclick="doSendLink()">Send code →</button>
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">Your name</label>
+        <select id="login-name" style="width:100%;">
+          <option value="">Select your name...</option>
+          ${TEAM_MEMBERS.map(n=>`<option value="${esc(n)}" ${n===selectedName?"selected":""}>${esc(n)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">PIN</label>
+        <input type="password" id="login-pin" placeholder="Enter your PIN" style="width:100%;" onkeydown="if(event.key==='Enter')doVerifyPin()">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doVerifyPin()">Sign in →</button>
     </div></div>`;
-  setTimeout(()=>document.getElementById("login-email")?.focus(),100);
+  setTimeout(()=>document.getElementById("login-pin")?.focus(),100);
 }
-function renderEnterCode(email, errorMsg=""){
-  document.getElementById("root").innerHTML=`
-    <div class="auth-screen"><div class="auth-card">
-      <h2>Enter your code</h2>
-      <div class="success-msg">We sent a 6-digit code to <strong>${esc(email)}</strong>. Enter it below to sign in.</div>
-      ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
-      <input type="hidden" id="otp-email" value="${esc(email)}">
-      <div class="form-group"><input type="text" id="otp-code" placeholder="code" maxlength="8" style="width:100%;font-size:24px;letter-spacing:6px;text-align:center;" onkeydown="if(event.key==='Enter')doVerifyCode()"></div>
-      <button class="btn btn-primary btn-full" onclick="doVerifyCode()">Sign in →</button>
-      <p class="subtitle" style="margin-top:1rem;">Didn't get it? <button class="signout-btn" onclick="doResendCode('${esc(email)}')">Send a new code</button> or <button class="signout-btn" onclick="renderLoginScreen()">use a different email</button>.</p>
-    </div></div>`;
-  setTimeout(()=>document.getElementById("otp-code")?.focus(),100);
-}
-function renderUnauthorized(email){
-  document.getElementById("root").innerHTML=`
-    <div class="auth-screen"><div class="auth-card">
-      <h2>Not authorized</h2>
-      <div class="error-msg">The email <strong>${esc(email)}</strong> isn't on the team roster. Please contact Andy Auffant to be added.</div>
-      <button class="btn btn-full" onclick="doSignOut()">Sign out</button>
-    </div></div>`;
-}
+
 
 // ── Idea card ────────────────────────────────────────────────────────────────
 function ideaCard(idea,mode){
@@ -642,9 +605,9 @@ function render(){
       ${tabs}${content}
     </div>`;
 }
- 
+
 // ── Boot ─────────────────────────────────────────────────────────────────────
-window.renderLoginScreen = renderLoginScreen;
+
 initAuth();
 </script>
 </body>
