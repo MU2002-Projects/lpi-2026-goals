@@ -437,7 +437,7 @@ function renderLoginScreen(errorMsg="", selectedName=""){
       </div>
       <div class="form-group">
         <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">PIN</label>
-        <input type="password" id="login-pin" placeholder="Enter your PIN" style="width:100%;" onkeydown="if(event.key==='Enter')doVerifyPin()">
+        <input type="password" id="login-pin" placeholder="Enter your PIN" style="width:100%;height:36px;" onkeydown="if(event.key==='Enter')doVerifyPin()">
       </div>
       <button class="btn btn-primary btn-full" onclick="doVerifyPin()">Sign in →</button>
     </div></div>`;
