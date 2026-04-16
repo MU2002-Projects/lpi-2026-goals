@@ -341,7 +341,7 @@ async function addComment(ideaId,text){
   comments.push(res[0]); commentDrafts[ideaId]=""; render();
 }
 async function flagIdea(ideaId,note){
-  if(!note.trim()){alert("Please note which idea this is similar to.");return;}
+  if(!note.trim()){alert("Please note which goal this is similar to.");return;}
   const existing=flags.find(f=>f.idea_id===ideaId&&f.author===currentUser);
   if(existing){await db.updateFlag(existing.id,{note:note.trim()});existing.note=note.trim();}
   else{const res=await db.addFlag({idea_id:ideaId,author:currentUser,note:note.trim()});flags.push(res[0]);}
@@ -416,7 +416,7 @@ window.submitForm=(submitted)=>{
   const impact=document.getElementById("d-impact")?.value||"";
   const effort=document.getElementById("d-effort")?.value||"";
   if(submitted&&(!title.trim()||!category||!description.trim())){alert("Please fill in the title, category, and description.");return;}
-  if(!submitted&&!title.trim()){alert("Give your idea a title first.");return;}
+  if(!submitted&&!title.trim()){alert("Give your goal a title first.");return;}
   submitIdea({title,category,description,impact,effort},submitted);
 };
 
@@ -565,10 +565,10 @@ function ideaCard(idea,mode){
     h+=`<div class="btn-row"><button class="btn btn-primary btn-sm" onclick="commitEdit('${idea.id}')">Save changes</button><button class="btn btn-sm" onclick="cancelEdit()">Cancel</button></div>`;
     h+=`</div>`;return h;
   }
-  const ideaNum = idea.idea_number ? `<span style="font-size:11px;font-weight:400;color:var(--text-secondary);background:var(--bg-secondary);border:0.5px solid var(--border-md);border-radius:4px;padding:2px 7px;margin-right:6px;">Idea #${idea.idea_number}</span>` : "";
+  const ideaNum = idea.idea_number ? `<span style="font-size:11px;font-weight:400;color:var(--text-secondary);background:var(--bg-secondary);border:0.5px solid var(--border-md);border-radius:4px;padding:2px 7px;margin-right:6px;">Goal #${idea.idea_number}</span>` : "";
   h+=`<div class="idea-header"><div><div class="idea-title">${ideaNum}${esc(idea.title)}</div>`;
   h+=`<div class="idea-meta">${av} ${name}`;
-  if(idea.merged&&idea.merged_authors?.length){const sn=mode!=="p1"&&mode!=="p2";h+=sn?` &middot; <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>`:` &middot; <em style="font-size:11px;">merged idea</em>`;}
+  if(idea.merged&&idea.merged_authors?.length){const sn=mode!=="p1"&&mode!=="p2";h+=sn?` &middot; <em style="font-size:11px;">+ ${idea.merged_authors.map(esc).join(", ")}</em>`:` &middot; <em style="font-size:11px;">merged goal</em>`;}
   h+=` &middot; ${esc(idea.category||"Uncategorized")}</div></div>`;
   h+=`<div class="badge-row">`;
   if(idea.merged) h+=`<span class="badge badge-orange">Merged</span>`;
@@ -635,36 +635,36 @@ function render(){
   let content="";
   if(phase===0){
     content+=`<div class="panel"><div class="panel-title">How this works</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Your ideas are private during Phase 1 — only you can see them until Phase 2 begins. Take your time, draft freely, and refine before you submit. Ideas will be shared with the full team when Phase 2 opens.</div></div>`;
-    content+=`<div class="panel"><div class="panel-title">Submit your idea</div><div class="panel-sub">Fill in the details below and submit before Apr 27.</div>`;
-    content+=`<div class="form-group"><label>Idea title</label><input type="text" id="d-title" placeholder="Give it a punchy name..."></div>`;
+    content+=`<div class="panel"><div class="panel-title">Submit your goal</div><div class="panel-sub">Fill in the details below and submit before Apr 27.</div>`;
+    content+=`<div class="form-group"><label>Goal title</label><input type="text" id="d-title" placeholder="Give it a punchy name..."></div>`;
     content+=`<div class="form-row"><div class="form-group"><label>Category</label><select id="d-cat"><option value="">Select...</option>${CATEGORIES.map(c=>`<option>${c}</option>`).join("")}</select></div><div class="form-group"><label>Estimated impact</label><select id="d-impact"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div><div class="form-group"><label>Estimated effort</label><select id="d-effort"><option value="">Select...</option>${["High","Medium","Low"].map(v=>`<option>${v}</option>`).join("")}</select></div></div>`;
     content+=`<div class="form-group"><label>Description & rationale</label><textarea id="d-desc" placeholder="What's the idea? Why does it matter? What would success look like?"></textarea></div>`;
     content+=`<div class="btn-row"><button class="btn btn-primary" onclick="submitForm(true)">Submit for Phase 2 →</button><button class="btn" onclick="submitForm(false)">Save as draft</button></div></div>`;
     if(myDrafts.length>0){content+=`<div class="panel"><div class="panel-title">Your drafts</div><div class="panel-sub">Only visible to you. Submit when you're ready.</div>`;myDrafts.forEach(i=>{content+=ideaCard(i,"p0");});content+=`</div>`;}
-    if(mySubmitted.length>0){content+=`<div class="panel"><div class="panel-title">Your submitted ideas</div><div class="panel-sub">Locked in for Phase 2 — looking good!</div>`;mySubmitted.forEach(i=>{content+=ideaCard(i,"p0");});content+=`</div>`;}
-    if(myIdeas.length===0) content+=`<div class="empty">No ideas yet — fill in the form above to get started!</div>`;
-    if(isAdmin()) content+=`<div class="panel panel-admin"><div class="panel-title">Admin controls</div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">${submitted.length} of ${ideas.length} idea${ideas.length!==1?"s":""} submitted so far.</div><button class="btn btn-primary" onclick="advancePhase()">Close ideation & open Phase 2 →</button></div>`;
+    if(mySubmitted.length>0){content+=`<div class="panel"><div class="panel-title">Your submitted goals</div><div class="panel-sub">Locked in for Phase 2 — looking good!</div>`;mySubmitted.forEach(i=>{content+=ideaCard(i,"p0");});content+=`</div>`;}
+    if(myIdeas.length===0) content+=`<div class="empty">No goals yet — fill in the form above to get started!</div>`;
+    if(isAdmin()) content+=`<div class="panel panel-admin"><div class="panel-title">Admin controls</div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">${submitted.length} of ${ideas.length} goal${ideas.length!==1?"s":""} submitted so far.</div><button class="btn btn-primary" onclick="advancePhase()">Close ideation & open Phase 2 →</button></div>`;
   }
   else if(phase===1){
-    content+=`<div class="notice">All submitted ideas are now visible. Authors are anonymous — focus on the ideas! Flag anything that looks like a duplicate.</div>`;
+    content+=`<div class="notice">All submitted goals are now visible. Authors are anonymous — focus on the goals! Flag anything that looks like a duplicate.</div>`;
     if(isAdmin()&&flaggedCount>0) content+=`<div class="notice notice-amber">${flaggedCount} idea${flaggedCount!==1?" have":" has"} been flagged as potentially similar. Use the merge tool to consolidate before voting opens.</div>`;
     if(isAdmin()){
       const selCount=Object.values(mergeSelections).filter(Boolean).length;
       content+=`<div class="panel panel-admin"><div class="panel-title">Admin controls</div><div class="btn-row"><button class="btn btn-amber" onclick="toggleMerge()">${showMergePanel?"Cancel merge":"Merge similar ideas"}</button><button class="btn btn-primary" onclick="advancePhase()">Lock ideas & open Phase 3 voting →</button></div>`;
-      if(showMergePanel){content+=`<div class="merge-list"><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Select 2 or more ideas to merge. The first selected idea's title and description are kept. All comments are combined and all authors credited.</div>`;submitted.forEach(i=>{const f=flagsForIdea(i.id).length;content+=`<div class="merge-item"><input type="checkbox" ${mergeSelections[i.id]?"checked":""} onchange="toggleMergeItem('${i.id}')"><div><div class="merge-item-title">${esc(i.title)}</div><div class="merge-item-meta">${esc(i.category)}${f>0?` · ${f} flag${f!==1?"s":""}`:""}</div></div></div>`;});if(selCount>=2) content+=`<div style="margin-top:10px;"><button class="btn btn-amber" onclick="doMerge()">Merge ${selCount} ideas →</button></div>`;content+=`</div>`;}
+      if(showMergePanel){content+=`<div class="merge-list"><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Select 2 or more goals to merge. The first selected goal's title and description are kept. All comments are combined and all authors credited.</div>`;submitted.forEach(i=>{const f=flagsForIdea(i.id).length;content+=`<div class="merge-item"><input type="checkbox" ${mergeSelections[i.id]?"checked":""} onchange="toggleMergeItem('${i.id}')"><div><div class="merge-item-title">${esc(i.title)}</div><div class="merge-item-meta">${esc(i.category)}${f>0?` · ${f} flag${f!==1?"s":""}`:""}</div></div></div>`;});if(selCount>=2) content+=`<div style="margin-top:10px;"><button class="btn btn-amber" onclick="doMerge()">Merge ${selCount} ideas →</button></div>`;content+=`</div>`;}
       content+=`</div>`;
     }
-    if(submitted.length===0) content+=`<div class="empty">No ideas submitted yet.</div>`;
+    if(submitted.length===0) content+=`<div class="empty">No goals submitted yet.</div>`;
     else submitted.forEach(i=>{content+=ideaCard(i,"p1");});
-    if(myUnsubmitted.length>0){content+=`<div class="panel"><div class="panel-title" style="color:var(--text-secondary);">Your unsubmitted drafts</div><div class="panel-sub">Still only visible to you — submit to add to the board.</div>`;myUnsubmitted.forEach(i=>{content+=ideaCard(i,"p1draft");});content+=`</div>`;}
+    if(myUnsubmitted.length>0){content+=`<div class="panel"><div class="panel-title" style="color:var(--text-secondary);">Your unsubmitted goals</div><div class="panel-sub">Still only visible to you — submit to add to the board.</div>`;myUnsubmitted.forEach(i=>{content+=ideaCard(i,"p1draft");});content+=`</div>`;}
   }
   else if(phase===2){
     const sorted=[...submitted];
-    content+=`<div class="notice">Authors are anonymous — vote for the ideas you believe in most!</div>`;
+    content+=`<div class="notice">Authors are anonymous — vote for the goals you believe in most!</div>`;
     content+=`<div class="votes-bar"><span style="font-size:14px;">Your votes: <strong style="color:#534AB7;">${myVotesRemaining()} remaining</strong> of ${VOTES_PER_PERSON}</span><div class="vote-dots">`;
     for(let i=0;i<VOTES_PER_PERSON;i++){const f=i<usedVotes;content+=`<div class="vote-dot" style="background:${f?"#534AB7":"var(--bg-secondary)"};border:0.5px solid ${f?"#534AB7":"var(--border-md)"};"></div>`;}
     content+=`</div></div>`;
-    if(sorted.length===0) content+=`<div class="empty">No ideas to vote on yet.</div>`;
+    if(sorted.length===0) content+=`<div class="empty">No goals to vote on yet.</div>`;
     else sorted.forEach(i=>{content+=ideaCard(i,"p2");});
     if(isAdmin()){const voters=[...new Set(votes.map(v=>v.author))].length;content+=`<div class="panel panel-admin" style="margin-top:1rem;"><div class="panel-title">Admin controls</div><div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">${voters} team member${voters!==1?"s have":" has"} voted so far.</div><button class="btn btn-teal" onclick="closeVoting()">Close voting & publish results →</button></div>`;}
   }
@@ -672,9 +672,9 @@ function render(){
     const sorted=[...submitted].sort((a,b)=>votesForIdea(b.id)-votesForIdea(a.id));
     const totalCast=votes.reduce((s,v)=>s+v.count,0), topScore=sorted.length>0?votesForIdea(sorted[0].id):0;
     const voters=[...new Set(votes.map(v=>v.author))].length;
-    if(topScore>0){const wc=sorted.filter(i=>votesForIdea(i.id)===topScore).length;content+=`<div class="notice notice-teal">🎉 <strong>Voting is closed.</strong> Congratulations to the top idea${wc>1?"s":""}! Authors are now revealed — these results will inform our 2026 team goals.</div>`;}
-    content+=`<div class="stats-grid"><div class="stat-card"><div class="stat-label">Ideas submitted</div><div class="stat-value">${submitted.length}</div></div><div class="stat-card"><div class="stat-label">Total votes cast</div><div class="stat-value">${totalCast}</div></div><div class="stat-card"><div class="stat-label">Members who voted</div><div class="stat-value">${voters}</div></div></div>`;
-    if(sorted.length===0){content+=`<div class="empty">No ideas were submitted.</div>`;}
+    if(topScore>0){const wc=sorted.filter(i=>votesForIdea(i.id)===topScore).length;content+=`<div class="notice notice-teal">🎉 <strong>Voting is closed.</strong> Congratulations to the top goal${wc>1?"s":""}! Authors are now revealed — these results will inform our 2026 team goals.</div>`;}
+    content+=`<div class="stats-grid"><div class="stat-card"><div class="stat-label">Goals submitted</div><div class="stat-value">${submitted.length}</div></div><div class="stat-card"><div class="stat-label">Total votes cast</div><div class="stat-value">${totalCast}</div></div><div class="stat-card"><div class="stat-label">Members who voted</div><div class="stat-value">${voters}</div></div></div>`;
+    if(sorted.length===0){content+=`<div class="empty">No goals were submitted.</div>`;}
     else{
       const rl=["1st","2nd","3rd"],rc=["rank-gold","rank-silver","rank-bronze"];
       let lastScore=-1,dispRank=0;
@@ -682,7 +682,7 @@ function render(){
         const v=votesForIdea(idea.id);if(v!==lastScore){dispRank=idx+1;lastScore=v;}
         const isWin=v===topScore&&topScore>0,pct=Math.round(v/maxVotes()*100);
         content+=`<div class="result-card ${isWin?"winner":""}"><div class="result-rank ${dispRank<=3?rc[dispRank-1]:""}">${dispRank<=3?rl[dispRank-1]:`${dispRank}th`}</div><div class="result-body">`;
-        content+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:4px;"><div class="result-title">${esc(idea.title)}</div><div class="badge-row">${isWin?`<span class="badge badge-teal">Top idea</span>`:""}</div></div>`;
+        content+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:4px;"><div class="result-title">${esc(idea.title)}</div><div class="badge-row">${isWin?`<span class="badge badge-teal">Top goal</span>`:""}</div></div>`;
         const allResultAuthors=[idea.author,...(idea.merged_authors||[])];
         const resultAvatars=allResultAuthors.map((a,i)=>`<div style="${i>0?"margin-left:-8px;":""}">${avatarEl(a)}</div>`).join("");
         const resultNames=allResultAuthors.map(esc).join(" & ");
@@ -696,7 +696,7 @@ function render(){
 
   document.getElementById("root").innerHTML=`
     <div class="app">
-      <div class="header"><h1>LPI 2026 goals</h1><p>Ideate, refine, and vote on our team's initiatives for the year ahead.</p></div>
+      <div class="header"><h1>LPI 2026 goals</h1><p>Submit, refine, and vote on our team's goals for the year ahead.</p></div>
       <div class="user-row">
         <span style="font-size:13px;color:var(--text-secondary);">Signed in as <strong>${esc(currentUser)}</strong></span>
         ${isAdmin()?`<span class="badge badge-purple">admin</span>`:`<span class="badge badge-gray">team member</span>`}
