@@ -202,6 +202,8 @@ const db = {
   patchVote:   (iid,au,c)=> api(`votes?idea_id=eq.${iid}&author=eq.${encodeURIComponent(au)}`,"PATCH",{count:c,updated_at:new Date().toISOString()}),
   deleteVotes: (id)      => api(`votes?idea_id=eq.${id}`,"DELETE"),
   logLogin:    (name)    => api("logins","POST",{user_name:name}),
+  getPin:      (name)    => api(`users?name=eq.${encodeURIComponent(name)}&select=pin`),
+  updatePin:   (name, pin) => api(`users?name=eq.${encodeURIComponent(name)}`,"PATCH",{pin, updated_at:new Date().toISOString()}),
 };
 
 // ── State ────────────────────────────────────────────────────────────────────
@@ -267,16 +269,33 @@ function initAuth(){
   }
 }
 
-function verifyPin(name, pin){
+async function verifyPin(name, pin){
   if(!name){ renderLoginScreen("Please select your name."); return; }
   if(!pin.trim()){ renderLoginScreen("Please enter your PIN.", name); return; }
-  if(TEAM_PINS[name] && pin.trim() === TEAM_PINS[name]){
-    currentUser = name;
-    localStorage.setItem("lpi_user", name);
-    db.logLogin(name);
-    showSplash = true; appLoading = false; renderSplash();
-  } else {
-    renderLoginScreen("Incorrect PIN — please try again or contact Andy.", name);
+  try {
+    const res = await db.getPin(name);
+    if(res && res.length > 0 && pin.trim() === res[0].pin){
+      currentUser = name;
+      localStorage.setItem("lpi_user", name);
+      db.logLogin(name);
+      showSplash = true; appLoading = false; renderSplash();
+    } else {
+      renderLoginScreen("Incorrect PIN — please try again or contact Andy.", name);
+    }
+  } catch(e) {
+    renderLoginScreen("Something went wrong — please try again.", name);
+  }
+}
+
+async function changePin(newPin, confirmPin){
+  if(!newPin.trim() || newPin.length < 4){ renderChangePinScreen("PIN must be at least 4 digits."); return; }
+  if(newPin !== confirmPin){ renderChangePinScreen("PINs don't match — please try again."); return; }
+  if(!/^\d+$/.test(newPin)){ renderChangePinScreen("PIN must contain numbers only."); return; }
+  try {
+    await db.updatePin(currentUser, newPin.trim());
+    renderChangePinScreen("", true);
+  } catch(e) {
+    renderChangePinScreen("Something went wrong — please try again.");
   }
 }
 
@@ -424,6 +443,64 @@ function renderSplash(){
     </div>`;
 }
 
+function renderLoginChangePinScreen(errorMsg="", selectedName=""){
+  document.getElementById("root").innerHTML=`
+    <div class="auth-screen"><div class="auth-card">
+      <h2>Change your PIN</h2>
+      <p class="subtitle">Enter your current PIN to verify your identity, then choose a new one.</p>
+      ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">Your name</label>
+        <select id="change-name" style="width:100%;">
+          <option value="">Select your name...</option>
+          ${TEAM_MEMBERS.map(n=>`<option value="${esc(n)}" ${n===selectedName?"selected":""}>${esc(n)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">Current PIN</label>
+        <input type="password" id="current-pin" placeholder="Enter your current PIN" style="width:100%;height:36px;">
+      </div>
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">New PIN</label>
+        <input type="password" id="new-pin-login" placeholder="Enter new PIN" style="width:100%;height:36px;">
+      </div>
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">Confirm new PIN</label>
+        <input type="password" id="confirm-pin-login" placeholder="Re-enter new PIN" style="width:100%;height:36px;" onkeydown="if(event.key==='Enter')doLoginChangePin()">
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="doLoginChangePin()">Save new PIN →</button>
+        <button class="btn" onclick="renderLoginScreen()">Cancel</button>
+      </div>
+    </div></div>`;
+  setTimeout(()=>document.getElementById("current-pin")?.focus(),100);
+}
+
+function renderChangePinScreen(errorMsg="", success=false){
+  document.getElementById("root").innerHTML=`
+    <div class="auth-screen"><div class="auth-card">
+      <h2>Change your PIN</h2>
+      <p class="subtitle">Choose a new numeric PIN of at least 4 digits.</p>
+      ${success?`<div class="success-msg">PIN updated successfully!</div>`:""}
+      ${errorMsg?`<div class="error-msg">${esc(errorMsg)}</div>`:""}
+      ${!success?`
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">New PIN</label>
+        <input type="password" id="new-pin" placeholder="Enter new PIN" style="width:100%;height:36px;" onkeydown="if(event.key==='Enter')document.getElementById('confirm-pin').focus()">
+      </div>
+      <div class="form-group">
+        <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">Confirm new PIN</label>
+        <input type="password" id="confirm-pin" placeholder="Re-enter new PIN" style="width:100%;height:36px;" onkeydown="if(event.key==='Enter')doChangePin()">
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="doChangePin()">Save new PIN →</button>
+        <button class="btn" onclick="cancelChangePin()">Cancel</button>
+      </div>`:`
+      <button class="btn btn-primary btn-full" onclick="cancelChangePin()">Back to the app →</button>`}
+    </div></div>`;
+  setTimeout(()=>document.getElementById("new-pin")?.focus(),100);
+}
+
 function renderLoginScreen(errorMsg="", selectedName=""){
   document.getElementById("root").innerHTML=`
     <div class="auth-screen"><div class="auth-card">
@@ -442,6 +519,7 @@ function renderLoginScreen(errorMsg="", selectedName=""){
         <input type="password" id="login-pin" placeholder="Enter your PIN" style="width:100%;height:36px;" onkeydown="if(event.key==='Enter')doVerifyPin()">
       </div>
       <button class="btn btn-primary btn-full" onclick="doVerifyPin()">Sign in →</button>
+      <p style="text-align:center;margin-top:1rem;"><button class="signout-btn" onclick="showLoginChangePinScreen()">Want to change your PIN?</button> &nbsp;·&nbsp; <span style="font-size:12px;color:var(--text-secondary);">Forgotten your PIN? Contact Andy.</span></p>
     </div></div>`;
   setTimeout(()=>document.getElementById("login-pin")?.focus(),100);
 }
@@ -602,6 +680,8 @@ function render(){
       <div class="user-row">
         <span style="font-size:13px;color:var(--text-secondary);">Signed in as <strong>${esc(currentUser)}</strong></span>
         ${isAdmin()?`<span class="badge badge-purple">admin</span>`:`<span class="badge badge-gray">team member</span>`}
+        <button class="signout-btn" onclick="showChangePinScreen()">Change PIN</button>
+        <span style="color:var(--border-md);">·</span>
         <button class="signout-btn" onclick="doSignOut()">Sign out</button>
       </div>
       ${tabs}${content}
