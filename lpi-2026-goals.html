@@ -389,6 +389,26 @@ window.closeVoting=()=>setPhase(3);
 window.doSignOut=()=>signOut();
 window.dismissSplash=()=>{ showSplash=false; loadAll(); };
 window.doVerifyPin=()=>{const name=document.getElementById("login-name")?.value||"";const pin=document.getElementById("login-pin")?.value||"";verifyPin(name,pin);};
+window.showChangePinScreen=()=>renderChangePinScreen();
+window.cancelChangePin=()=>render();
+window.doChangePin=()=>{const np=document.getElementById("new-pin")?.value||"";const cp=document.getElementById("confirm-pin")?.value||"";changePin(np,cp);};
+window.showLoginChangePinScreen=()=>renderLoginChangePinScreen();
+window.doLoginChangePin=async()=>{
+  const name=document.getElementById("change-name")?.value||"";
+  const currentPin=document.getElementById("current-pin")?.value||"";
+  const newPin=document.getElementById("new-pin-login")?.value||"";
+  const confirmPin=document.getElementById("confirm-pin-login")?.value||"";
+  if(!name){ renderLoginChangePinScreen("Please select your name."); return; }
+  if(!currentPin.trim()){ renderLoginChangePinScreen("Please enter your current PIN.", name); return; }
+  if(!newPin.trim()||newPin.length<4){ renderLoginChangePinScreen("New PIN must be at least 4 digits.", name); return; }
+  if(newPin!==confirmPin){ renderLoginChangePinScreen("New PINs don't match — please try again.", name); return; }
+  try{
+    const res=await db.getPin(name);
+    if(!res||res.length===0||currentPin.trim()!==res[0].pin){ renderLoginChangePinScreen("Current PIN is incorrect — please try again.", name); return; }
+    await db.updatePin(name, newPin.trim());
+    renderLoginScreen("PIN updated successfully! Please sign in with your new PIN.");
+  } catch(e){ renderLoginChangePinScreen("Something went wrong — please try again.", name); }
+};
 window.submitForm=(submitted)=>{
   const title=document.getElementById("d-title")?.value||"";
   const category=document.getElementById("d-cat")?.value||"";
