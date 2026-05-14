@@ -365,7 +365,9 @@ async function executeMerge(){
   const primary=selected[0];
   const allAuthors=[...new Set(selected.flatMap(i=>[i.author,...(i.merged_authors||[])]))];
   const allComments=selected.flatMap(i=>commentsForIdea(i.id));
-  const newIdea=await db.addIdea({author:primary.author,title:primary.title,category:primary.category,description:primary.description,impact:primary.impact,effort:primary.effort,submitted:true,merged:true,merged_authors:allAuthors.filter(a=>a!==primary.author),phase_created:1});
+  // Combine all descriptions, labeling each by author
+  const combinedDescription = selected.map(i => `[${i.author}]: ${i.description}`).join("\n\n");
+  const newIdea=await db.addIdea({author:primary.author,title:primary.title,category:primary.category,description:combinedDescription,impact:primary.impact,effort:primary.effort,submitted:true,merged:true,merged_authors:allAuthors.filter(a=>a!==primary.author),phase_created:1});
   const newId=newIdea[0].id;
   for(const c of allComments) await db.addComment({idea_id:newId,author:c.author,text:c.text});
   for(const id of ids){await db.deleteVotes(id);await db.deleteIdea(id);}
